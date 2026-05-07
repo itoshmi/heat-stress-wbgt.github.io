@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,6 +18,39 @@
     margin: 0 auto;
   }
 
+  .lang-bar {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+    margin-bottom: 1.25rem;
+  }
+
+  .lang-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border: 1.5px solid #d0d7e2;
+    border-radius: 20px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 11.5px;
+    font-family: 'Georgia', serif;
+    color: #444;
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
+  }
+
+  .lang-btn:hover { border-color: #1a3a5c; color: #1a3a5c; }
+
+  .lang-btn.active {
+    background: #1a3a5c;
+    border-color: #1a3a5c;
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .lang-btn .flag { font-size: 15px; line-height: 1; }
+
   header {
     margin-bottom: 1.75rem;
     border-left: 4px solid #1a3a5c;
@@ -28,15 +62,10 @@
     font-weight: 700;
     color: #1a3a5c;
     letter-spacing: -0.3px;
-    font-family: 'Georgia', serif;
     margin-bottom: 0.3rem;
   }
 
-  header p {
-    font-size: 12.5px;
-    color: #555;
-    font-style: italic;
-  }
+  header p { font-size: 12.5px; color: #555; font-style: italic; }
 
   .controls {
     display: flex;
@@ -49,13 +78,7 @@
     border: 1px solid #e0e4ea;
   }
 
-  .ctrl-group {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    flex: 1;
-    min-width: 200px;
-  }
+  .ctrl-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 200px; }
 
   .ctrl-group label {
     font-size: 11.5px;
@@ -65,16 +88,8 @@
     letter-spacing: 0.4px;
   }
 
-  .ctrl-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .ctrl-row input[type=range] {
-    flex: 1;
-    accent-color: #1a3a5c;
-  }
+  .ctrl-row { display: flex; align-items: center; gap: 10px; }
+  .ctrl-row input[type=range] { flex: 1; accent-color: #1a3a5c; }
 
   .ctrl-val {
     font-size: 13px;
@@ -131,15 +146,10 @@
     border: 1px solid #e0e4ea;
   }
 
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
 
   .legend-swatch {
-    width: 13px;
-    height: 13px;
+    width: 13px; height: 13px;
     border-radius: 2px;
     border: 0.5px solid rgba(0,0,0,0.18);
     flex-shrink: 0;
@@ -156,21 +166,28 @@
 </head>
 <body>
 
+<div class="lang-bar">
+  <button class="lang-btn active" onclick="setLang('en')"><span class="flag">🇺🇸</span> EN</button>
+  <button class="lang-btn" onclick="setLang('es')"><span class="flag">🇲🇽</span> ES</button>
+  <button class="lang-btn" onclick="setLang('pt')"><span class="flag">🇧🇷</span> PT</button>
+  <button class="lang-btn" onclick="setLang('fr')"><span class="flag">🇫🇷</span> FR</button>
+</div>
+
 <header>
-  <h1>WBGT Heat Stress Calculator</h1>
-  <p>Estimates Wet Bulb Globe Temperature from air temperature, humidity, cloud cover, and atmospheric pressure.</p>
+  <h1 id="t-title"></h1>
+  <p id="t-desc"></p>
 </header>
 
 <div class="controls">
   <div class="ctrl-group">
-    <label>&#9729; Cloud Cover (%)</label>
+    <label id="t-cloud-label"></label>
     <div class="ctrl-row">
       <input type="range" id="cloud" min="0" max="100" step="5" value="0">
       <span class="ctrl-val" id="cloud-val">0%</span>
     </div>
   </div>
   <div class="ctrl-group">
-    <label>&#9096; Atmospheric Pressure (hPa)</label>
+    <label id="t-pressure-label"></label>
     <div class="ctrl-row">
       <input type="range" id="pressure" min="600" max="1060" step="10" value="1013">
       <span class="ctrl-val" id="pressure-val">1013 hPa</span>
@@ -183,22 +200,62 @@
 </div>
 
 <div class="legend">
-  <div class="legend-item"><div class="legend-swatch" style="background:#d4edda"></div><span>&lt;25 &mdash; Normal</span></div>
-  <div class="legend-item"><div class="legend-swatch" style="background:#fff3cd"></div><span>25&ndash;27.9 &mdash; Caution</span></div>
-  <div class="legend-item"><div class="legend-swatch" style="background:#ffe0b2"></div><span>28&ndash;29.4 &mdash; Extreme Caution</span></div>
-  <div class="legend-item"><div class="legend-swatch" style="background:#ef9a9a"></div><span>29.5&ndash;31.9 &mdash; Danger</span></div>
-  <div class="legend-item"><div class="legend-swatch" style="background:#e53935"></div><span>&ge;32 &mdash; Extreme Danger</span></div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#d4edda"></div><span id="l0"></span></div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#fff3cd"></div><span id="l1"></span></div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#ffe0b2"></div><span id="l2"></span></div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#ef9a9a"></div><span id="l3"></span></div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#e53935"></div><span id="l4"></span></div>
 </div>
 
-<p class="formula-note">
-  Formula (Epstein): WBGT = 0.567&middot;T + 0.393&middot;Pv + 3.94&middot;(1 &minus; cloud/100) &nbsp;|&nbsp;
-  Pv = (RH/100)&middot;6.105&middot;e<sup>(17.27&middot;T / (237.7+T))</sup>&middot;(P/1013.25) &nbsp;|&nbsp;
-  Ref: Prof. Yoram Epstein
-</p>
+<p class="formula-note" id="t-formula"></p>
 
 <script>
-const TEMPS = [20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50];
-const RHS   = [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100];
+var LANGS = {
+  en: {
+    title: 'WBGT Heat Stress Calculator',
+    desc: 'Estimates Wet Bulb Globe Temperature from air temperature, humidity, cloud cover, and atmospheric pressure.',
+    cloudLabel: '☁ Cloud Cover (%)',
+    pressureLabel: '⚖ Atmospheric Pressure (hPa)',
+    tempHeader: 'Temperature (°C)',
+    rhHeader: 'RH %',
+    legend: ['<25 — Normal','25–27.9 — Caution','28–29.4 — Extreme Caution','29.5–31.9 — Danger','≥32 — Extreme Danger'],
+    formula: 'Formula (Epstein): WBGT = 0.567·T + 0.393·Pv + 3.94·(1 − cloud/100)  |  Pv = (RH/100)·6.105·e^(17.27·T/(237.7+T))·(P/1013.25)  |  Ref: Prof. Yoram Epstein'
+  },
+  es: {
+    title: 'Calculadora de Estrés Térmico WBGT',
+    desc: 'Estima la Temperatura de Globo de Bulbo Húmedo a partir de temperatura, humedad, nubosidad y presión atmosférica.',
+    cloudLabel: '☁ Cobertura Nubosa (%)',
+    pressureLabel: '⚖ Presión Atmosférica (hPa)',
+    tempHeader: 'Temperatura (°C)',
+    rhHeader: 'HR %',
+    legend: ['<25 — Normal','25–27.9 — Precaución','28–29.4 — Precaución Extrema','29.5–31.9 — Peligro','≥32 — Peligro Extremo'],
+    formula: 'Fórmula (Epstein): WBGT = 0.567·T + 0.393·Pv + 3.94·(1 − nubosidad/100)  |  Pv = (HR/100)·6.105·e^(17.27·T/(237.7+T))·(P/1013.25)  |  Ref: Prof. Yoram Epstein'
+  },
+  pt: {
+    title: 'Calculadora de Estresse Térmico WBGT',
+    desc: 'Estima a Temperatura de Globo de Bulbo Úmido a partir de temperatura, umidade, nebulosidade e pressão atmosférica.',
+    cloudLabel: '☁ Cobertura de Nuvens (%)',
+    pressureLabel: '⚖ Pressão Atmosférica (hPa)',
+    tempHeader: 'Temperatura (°C)',
+    rhHeader: 'UR %',
+    legend: ['<25 — Normal','25–27.9 — Atenção','28–29.4 — Atenção Extrema','29.5–31.9 — Perigo','≥32 — Perigo Extremo'],
+    formula: 'Fórmula (Epstein): WBGT = 0.567·T + 0.393·Pv + 3.94·(1 − nuvens/100)  |  Pv = (UR/100)·6.105·e^(17.27·T/(237.7+T))·(P/1013.25)  |  Ref: Prof. Yoram Epstein'
+  },
+  fr: {
+    title: 'Calculateur de Stress Thermique WBGT',
+    desc: "Estime la Température de Globe à Bulbe Humide à partir de la température, l'humidité, la couverture nuageuse et la pression atmosphérique.",
+    cloudLabel: '☁ Couverture Nuageuse (%)',
+    pressureLabel: '⚖ Pression Atmosphérique (hPa)',
+    tempHeader: 'Température (°C)',
+    rhHeader: 'HR %',
+    legend: ['<25 — Normal','25–27.9 — Prudence','28–29.4 — Prudence Extrême','29.5–31.9 — Danger','≥32 — Danger Extrême'],
+    formula: 'Formule (Epstein) : WBGT = 0.567·T + 0.393·Pv + 3.94·(1 − nuages/100)  |  Pv = (HR/100)·6.105·e^(17.27·T/(237.7+T))·(P/1013.25)  |  Réf : Prof. Yoram Epstein'
+  }
+};
+
+var TEMPS = [20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50];
+var RHS   = [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100];
+var currentLang = 'en';
 
 function calcWBGT(T, RH, cloud, pressure) {
   var pf = pressure / 1013.25;
@@ -217,9 +274,10 @@ function getColor(w) {
 function buildTable() {
   var cloud    = +document.getElementById('cloud').value;
   var pressure = +document.getElementById('pressure').value;
+  var L = LANGS[currentLang];
   var html = '<thead><tr>';
-  html += '<th style="background:#2c5f8a;writing-mode:vertical-rl;transform:rotate(180deg);padding:8px 4px;min-width:22px;font-size:10px">RH %</th>';
-  html += '<th style="background:#1a3a5c;color:#fff;text-align:left;padding:4px 8px;font-size:10px" colspan="' + TEMPS.length + '">Temperature (&deg;C)</th>';
+  html += '<th style="background:#2c5f8a;writing-mode:vertical-rl;transform:rotate(180deg);padding:8px 4px;min-width:22px;font-size:10px">' + L.rhHeader + '</th>';
+  html += '<th style="background:#1a3a5c;color:#fff;text-align:left;padding:4px 8px;font-size:10px" colspan="' + TEMPS.length + '">' + L.tempHeader + '</th>';
   html += '</tr><tr><th style="background:#1a3a5c;min-width:22px"></th>';
   TEMPS.forEach(function(t) { html += '<th>' + t + '</th>'; });
   html += '</tr></thead><tbody>';
@@ -236,6 +294,28 @@ function buildTable() {
   document.getElementById('wbgt-table').innerHTML = html;
 }
 
+function applyLang(code) {
+  var L = LANGS[code];
+  document.documentElement.lang = code;
+  document.getElementById('t-title').textContent = L.title;
+  document.getElementById('t-desc').textContent = L.desc;
+  document.getElementById('t-cloud-label').textContent = L.cloudLabel;
+  document.getElementById('t-pressure-label').textContent = L.pressureLabel;
+  document.getElementById('t-formula').textContent = L.formula;
+  L.legend.forEach(function(txt, i) {
+    document.getElementById('l' + i).textContent = txt;
+  });
+  buildTable();
+}
+
+function setLang(code) {
+  currentLang = code;
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('onclick') === "setLang('" + code + "')");
+  });
+  applyLang(code);
+}
+
 document.getElementById('cloud').addEventListener('input', function() {
   document.getElementById('cloud-val').textContent = this.value + '%';
   buildTable();
@@ -245,7 +325,7 @@ document.getElementById('pressure').addEventListener('input', function() {
   buildTable();
 });
 
-buildTable();
+applyLang('en');
 </script>
 </body>
 </html>
