@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WBGT Heat Stress Calculator</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', serif;
+    font-size: 13px;
+    background: #f7f8fa;
+    color: #1a1a1a;
+    padding: 2rem 1.5rem 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  header {
+    margin-bottom: 1.75rem;
+    border-left: 4px solid #1a3a5c;
+    padding-left: 1rem;
+  }
+
+  header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a3a5c;
+    letter-spacing: -0.3px;
+    font-family: 'Georgia', serif;
+    margin-bottom: 0.3rem;
+  }
+
+  header p {
+    font-size: 12.5px;
+    color: #555;
+    font-style: italic;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 1.5rem;
+    background: #fff;
+    padding: 1rem 1.25rem;
+    border-radius: 6px;
+    border: 1px solid #e0e4ea;
+  }
+
+  .ctrl-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .ctrl-group label {
+    font-size: 11.5px;
+    color: #444;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .ctrl-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .ctrl-row input[type=range] {
+    flex: 1;
+    accent-color: #1a3a5c;
+  }
+
+  .ctrl-val {
+    font-size: 13px;
+    font-weight: 700;
+    min-width: 56px;
+    text-align: right;
+    color: #1a3a5c;
+  }
+
+  .matrix-wrap {
+    overflow-x: auto;
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #e0e4ea;
+    padding: 0.75rem;
+  }
+
+  table { border-collapse: collapse; font-size: 11px; }
+
+  th {
+    background: #1a3a5c;
+    color: #fff;
+    padding: 4px 6px;
+    text-align: center;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 3px 5px;
+    text-align: center;
+    min-width: 36px;
+    font-size: 11px;
+    border: 0.5px solid rgba(0,0,0,0.07);
+  }
+
+  td.rh-label {
+    background: #1a3a5c;
+    color: #fff;
+    font-weight: 600;
+    padding: 3px 8px;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 1.1rem;
+    font-size: 11.5px;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #e0e4ea;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .legend-swatch {
+    width: 13px;
+    height: 13px;
+    border-radius: 2px;
+    border: 0.5px solid rgba(0,0,0,0.18);
+    flex-shrink: 0;
+  }
+
+  .formula-note {
+    font-size: 10.5px;
+    color: #888;
+    margin-top: 0.85rem;
+    line-height: 1.7;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>WBGT Heat Stress Calculator</h1>
+  <p>Estimates Wet Bulb Globe Temperature from air temperature, humidity, cloud cover, and atmospheric pressure.</p>
+</header>
+
+<div class="controls">
+  <div class="ctrl-group">
+    <label>&#9729; Cloud Cover (%)</label>
+    <div class="ctrl-row">
+      <input type="range" id="cloud" min="0" max="100" step="5" value="0">
+      <span class="ctrl-val" id="cloud-val">0%</span>
+    </div>
+  </div>
+  <div class="ctrl-group">
+    <label>&#9096; Atmospheric Pressure (hPa)</label>
+    <div class="ctrl-row">
+      <input type="range" id="pressure" min="600" max="1060" step="10" value="1013">
+      <span class="ctrl-val" id="pressure-val">1013 hPa</span>
+    </div>
+  </div>
+</div>
+
+<div class="matrix-wrap">
+  <table id="wbgt-table"></table>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-swatch" style="background:#d4edda"></div><span>&lt;25 &mdash; Normal</span></div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#fff3cd"></div><span>25&ndash;27.9 &mdash; Caution</span></div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#ffe0b2"></div><span>28&ndash;29.4 &mdash; Extreme Caution</span></div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#ef9a9a"></div><span>29.5&ndash;31.9 &mdash; Danger</span></div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#e53935"></div><span>&ge;32 &mdash; Extreme Danger</span></div>
+</div>
+
+<p class="formula-note">
+  Formula (Epstein): WBGT = 0.567&middot;T + 0.393&middot;Pv + 3.94&middot;(1 &minus; cloud/100) &nbsp;|&nbsp;
+  Pv = (RH/100)&middot;6.105&middot;e<sup>(17.27&middot;T / (237.7+T))</sup>&middot;(P/1013.25) &nbsp;|&nbsp;
+  Ref: Prof. Yoram Epstein
+</p>
+
+<script>
+const TEMPS = [20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50];
+const RHS   = [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100];
+
+function calcWBGT(T, RH, cloud, pressure) {
+  var pf = pressure / 1013.25;
+  var Pv = (RH / 100) * 6.105 * Math.exp((17.27 * T) / (237.7 + T)) * pf;
+  return 0.567 * T + 0.393 * Pv + 3.94 * (1 - cloud / 100);
+}
+
+function getColor(w) {
+  if (w < 25)   return { bg: '#d4edda', text: '#155724' };
+  if (w < 28)   return { bg: '#fff3cd', text: '#856404' };
+  if (w < 29.5) return { bg: '#ffe0b2', text: '#7b3700' };
+  if (w < 32)   return { bg: '#ef9a9a', text: '#7f0000' };
+  return { bg: '#e53935', text: '#fff' };
+}
+
+function buildTable() {
+  var cloud    = +document.getElementById('cloud').value;
+  var pressure = +document.getElementById('pressure').value;
+  var html = '<thead><tr>';
+  html += '<th style="background:#2c5f8a;writing-mode:vertical-rl;transform:rotate(180deg);padding:8px 4px;min-width:22px;font-size:10px">RH %</th>';
+  html += '<th style="background:#1a3a5c;color:#fff;text-align:left;padding:4px 8px;font-size:10px" colspan="' + TEMPS.length + '">Temperature (&deg;C)</th>';
+  html += '</tr><tr><th style="background:#1a3a5c;min-width:22px"></th>';
+  TEMPS.forEach(function(t) { html += '<th>' + t + '</th>'; });
+  html += '</tr></thead><tbody>';
+  RHS.forEach(function(rh) {
+    html += '<tr><td class="rh-label">' + rh + '</td>';
+    TEMPS.forEach(function(t) {
+      var w = calcWBGT(t, rh, cloud, pressure);
+      var c = getColor(w);
+      html += '<td style="background:' + c.bg + ';color:' + c.text + ';font-weight:500">' + w.toFixed(1) + '</td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  document.getElementById('wbgt-table').innerHTML = html;
+}
+
+document.getElementById('cloud').addEventListener('input', function() {
+  document.getElementById('cloud-val').textContent = this.value + '%';
+  buildTable();
+});
+document.getElementById('pressure').addEventListener('input', function() {
+  document.getElementById('pressure-val').textContent = this.value + ' hPa';
+  buildTable();
+});
+
+buildTable();
+</script>
+</body>
+</html>
