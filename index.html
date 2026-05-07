@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -215,41 +214,41 @@
 var LANGS = {
   en: {
     title: 'WBGT Heat Stress Calculator',
-    desc: 'Estimates Wet Bulb Globe Temperature from air temperature, humidity, cloud cover, and atmospheric pressure.',
-    cloudLabel: '☁ Cloud Cover (%)',
-    pressureLabel: '⚖ Atmospheric Pressure (hPa)',
+    desc: 'Look up the current outdoor temperature and air humidity in the table, adjust sky conditions and altitude, and see how much heat and environmental stress your body is under right now.',
+    cloudLabel: '☁ Sky Conditions',
+    pressureLabel: '⚖ Altitude / Pressure (hPa)',
     tempHeader: 'Temperature (°C)',
-    rhHeader: 'RH %',
+    rhHeader: 'Humidity %',
     legend: ['<25 — Normal','25–27.9 — Caution','28–29.4 — Extreme Caution','29.5–31.9 — Danger','≥32 — Extreme Danger'],
     formula: 'Formula (Epstein): WBGT = 0.567·T + 0.393·Pv + 3.94·(1 − cloud/100)  |  Pv = (RH/100)·6.105·e^(17.27·T/(237.7+T))·(P/1013.25)  |  Ref: Prof. Yoram Epstein'
   },
   es: {
     title: 'Calculadora de Estrés Térmico WBGT',
-    desc: 'Estima la Temperatura de Globo de Bulbo Húmedo a partir de temperatura, humedad, nubosidad y presión atmosférica.',
-    cloudLabel: '☁ Cobertura Nubosa (%)',
-    pressureLabel: '⚖ Presión Atmosférica (hPa)',
+    desc: 'Busca la temperatura exterior actual y la humedad del aire en la tabla, ajusta las condiciones del cielo y la altitud, y descubre cuánto estrés por calor está soportando tu cuerpo en este momento.',
+    cloudLabel: '☁ Condiciones del Cielo',
+    pressureLabel: '⚖ Altitud / Presión (hPa)',
     tempHeader: 'Temperatura (°C)',
-    rhHeader: 'HR %',
+    rhHeader: 'Humedad %',
     legend: ['<25 — Normal','25–27.9 — Precaución','28–29.4 — Precaución Extrema','29.5–31.9 — Peligro','≥32 — Peligro Extremo'],
     formula: 'Fórmula (Epstein): WBGT = 0.567·T + 0.393·Pv + 3.94·(1 − nubosidad/100)  |  Pv = (HR/100)·6.105·e^(17.27·T/(237.7+T))·(P/1013.25)  |  Ref: Prof. Yoram Epstein'
   },
   pt: {
     title: 'Calculadora de Estresse Térmico WBGT',
-    desc: 'Estima a Temperatura de Globo de Bulbo Úmido a partir de temperatura, umidade, nebulosidade e pressão atmosférica.',
-    cloudLabel: '☁ Cobertura de Nuvens (%)',
-    pressureLabel: '⚖ Pressão Atmosférica (hPa)',
+    desc: 'Localize a temperatura externa atual e a umidade do ar na tabela, ajuste as condições do céu e a altitude, e veja quanto estresse pelo calor seu corpo está enfrentando agora.',
+    cloudLabel: '☁ Condições do Céu',
+    pressureLabel: '⚖ Altitude / Pressão (hPa)',
     tempHeader: 'Temperatura (°C)',
-    rhHeader: 'UR %',
+    rhHeader: 'Umidade %',
     legend: ['<25 — Normal','25–27.9 — Atenção','28–29.4 — Atenção Extrema','29.5–31.9 — Perigo','≥32 — Perigo Extremo'],
     formula: 'Fórmula (Epstein): WBGT = 0.567·T + 0.393·Pv + 3.94·(1 − nuvens/100)  |  Pv = (UR/100)·6.105·e^(17.27·T/(237.7+T))·(P/1013.25)  |  Ref: Prof. Yoram Epstein'
   },
   fr: {
     title: 'Calculateur de Stress Thermique WBGT',
-    desc: "Estime la Température de Globe à Bulbe Humide à partir de la température, l'humidité, la couverture nuageuse et la pression atmosphérique.",
-    cloudLabel: '☁ Couverture Nuageuse (%)',
-    pressureLabel: '⚖ Pression Atmosphérique (hPa)',
+    desc: "Repérez la température extérieure actuelle et l'humidité de l'air dans le tableau, ajustez les conditions du ciel et l'altitude, et découvrez le niveau de stress thermique que subit votre corps en ce moment.",
+    cloudLabel: '☁ Conditions du Ciel',
+    pressureLabel: '⚖ Altitude / Pression (hPa)',
     tempHeader: 'Température (°C)',
-    rhHeader: 'HR %',
+    rhHeader: 'Humidité %',
     legend: ['<25 — Normal','25–27.9 — Prudence','28–29.4 — Prudence Extrême','29.5–31.9 — Danger','≥32 — Danger Extrême'],
     formula: 'Formule (Epstein) : WBGT = 0.567·T + 0.393·Pv + 3.94·(1 − nuages/100)  |  Pv = (HR/100)·6.105·e^(17.27·T/(237.7+T))·(P/1013.25)  |  Réf : Prof. Yoram Epstein'
   }
@@ -277,12 +276,22 @@ function buildTable() {
   var cloud    = +document.getElementById('cloud').value;
   var pressure = +document.getElementById('pressure').value;
   var L = LANGS[currentLang];
-  var html = '<thead><tr>';
-  html += '<th style="background:#2c5f8a;writing-mode:vertical-rl;transform:rotate(180deg);padding:8px 4px;min-width:22px;font-size:10px">' + L.rhHeader + '</th>';
-  html += '<th style="background:#1a3a5c;color:#fff;text-align:left;padding:4px 8px;font-size:10px" colspan="' + TEMPS.length + '">' + L.tempHeader + '</th>';
-  html += '</tr><tr><th style="background:#1a3a5c;min-width:22px"></th>';
-  TEMPS.forEach(function(t) { html += '<th>' + t + '</th>'; });
-  html += '</tr></thead><tbody>';
+  var html = '<thead>';
+  // Row 1: corner cell + temp header centered only over data columns
+  html += '<tr>';
+  html += '<th rowspan="2" style="background:#1a3a5c;min-width:28px;max-width:28px;padding:0;vertical-align:middle;">'
+        + '<div style="writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;font-size:9.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#a8c4e0;padding:10px 6px;">'
+        + L.rhHeader + '</div></th>';
+  html += '<th colspan="' + TEMPS.length + '" style="background:#1a3a5c;color:#a8c4e0;text-align:center;padding:5px 8px;font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.1);">'
+        + '— ' + L.tempHeader + ' —</th>';
+  html += '</tr>';
+  // Row 2: temperature values
+  html += '<tr>';
+  TEMPS.forEach(function(t) {
+    html += '<th style="background:#243f5e;color:#e8f0f8;padding:4px 5px;font-size:10.5px;font-weight:700;min-width:36px;">' + t + '</th>';
+  });
+  html += '</tr>';
+  html += '</thead><tbody>';
   RHS.forEach(function(rh) {
     html += '<tr><td class="rh-label">' + rh + '</td>';
     TEMPS.forEach(function(t) {
