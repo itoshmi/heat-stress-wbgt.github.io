@@ -7,275 +7,92 @@
 <title>WBGT Heat Stress Calculator</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Georgia', serif;
-    font-size: 13px;
-    background: #f7f8fa;
-    color: #1a1a1a;
-    padding: 1rem 1.5rem 2.5rem;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  /* ── Lang bar ── */
-  .lang-bar {
-    display: flex;
-    gap: 6px;
-    justify-content: flex-end;
-    margin-bottom: 0.75rem;
-  }
-  .lang-btn {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 3px 9px;
-    border: 1.5px solid #d0d7e2;
-    border-radius: 20px;
-    background: #fff;
-    cursor: pointer;
-    font-size: 11px;
-    font-family: 'Georgia', serif;
-    color: #444;
-    transition: border-color 0.15s, background 0.15s, color 0.15s;
-  }
+  body { font-family: 'Georgia', serif; font-size: 13px; background: #f7f8fa; color: #1a1a1a; padding: 1rem 1.5rem 2.5rem; max-width: 1100px; margin: 0 auto; }
+  .lang-bar { display: flex; gap: 6px; justify-content: flex-end; margin-bottom: 0.75rem; }
+  .lang-btn { display: flex; align-items: center; gap: 5px; padding: 3px 9px; border: 1.5px solid #d0d7e2; border-radius: 20px; background: #fff; cursor: pointer; font-size: 11px; font-family: 'Georgia', serif; color: #444; transition: border-color 0.15s, background 0.15s, color 0.15s; }
   .lang-btn:hover { border-color: #1a3a5c; color: #1a3a5c; }
   .lang-btn.active { background: #1a3a5c; border-color: #1a3a5c; color: #fff; font-weight: 600; }
   .lang-btn .flag { font-size: 14px; line-height: 1; }
-
-  /* ── Header ── */
-  header {
-    margin-bottom: 0.75rem;
-    border-left: 4px solid #1a3a5c;
-    padding: 0.2rem 0 0.2rem 0.85rem;
-  }
+  header { margin-bottom: 0.75rem; border-left: 4px solid #1a3a5c; padding: 0.2rem 0 0.2rem 0.85rem; }
   header h1 { font-size: 17px; font-weight: 700; color: #1a3a5c; letter-spacing: -0.3px; margin-bottom: 0.15rem; }
-  header p  { font-size: 11.5px; color: #555; font-style: italic; }
-
-  /* ── Live panel ── */
-  .live-panel {
-    background: #fff;
-    border: 1px solid #e0e4ea;
-    border-radius: 6px;
-    padding: 0.75rem 1rem;
-    margin-bottom: 0.6rem;
-  }
-
-  .search-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .search-label {
-    font-size: 10.5px;
-    color: #444;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .search-wrap {
-    position: relative;
-    flex: 1;
-    max-width: 340px;
-  }
-  .search-wrap input {
-    width: 100%;
-    padding: 6px 28px 6px 9px;
-    font-size: 12.5px;
-    font-family: 'Georgia', serif;
-    border: 1.5px solid #d0d7e2;
-    border-radius: 4px;
-    outline: none;
-    color: #1a1a1a;
-    background: #fafbfc;
-    transition: border-color 0.15s;
-  }
+  header p { font-size: 11.5px; color: #555; font-style: italic; }
+  .live-panel { background: #fff; border: 1px solid #e0e4ea; border-radius: 6px; padding: 0.75rem 1rem; margin-bottom: 0.6rem; }
+  .search-row { display: flex; align-items: center; gap: 10px; }
+  .search-label { font-size: 10.5px; color: #444; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; flex-shrink: 0; }
+  .search-wrap { position: relative; flex: 1; max-width: 340px; }
+  .search-wrap input { width: 100%; padding: 6px 28px 6px 9px; font-size: 12.5px; font-family: 'Georgia', serif; border: 1.5px solid #d0d7e2; border-radius: 4px; outline: none; color: #1a1a1a; background: #fafbfc; transition: border-color 0.15s; }
   .search-wrap input:focus { border-color: #1a3a5c; background: #fff; }
-  .search-spinner {
-    position: absolute;
-    right: 7px; top: 50%;
-    transform: translateY(-50%);
-    width: 12px; height: 12px;
-    border: 2px solid #ccc;
-    border-top-color: #1a3a5c;
-    border-radius: 50%;
-    animation: spin 0.6s linear infinite;
-    display: none;
-  }
+  .search-spinner { position: absolute; right: 7px; top: 50%; transform: translateY(-50%); width: 12px; height: 12px; border: 2px solid #ccc; border-top-color: #1a3a5c; border-radius: 50%; animation: spin 0.6s linear infinite; display: none; }
   @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
-  .suggestions {
-    position: absolute;
-    top: 100%; left: 0; right: 0;
-    background: #fff;
-    border: 1px solid #d0d7e2;
-    border-top: none;
-    border-radius: 0 0 4px 4px;
-    max-height: 170px;
-    overflow-y: auto;
-    z-index: 100;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  }
-  .suggestion-item {
-    padding: 7px 9px;
-    cursor: pointer;
-    font-size: 12px;
-    color: #333;
-    transition: background 0.1s;
-  }
+  .suggestions { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 1px solid #d0d7e2; border-top: none; border-radius: 0 0 4px 4px; max-height: 170px; overflow-y: auto; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .suggestion-item { padding: 7px 9px; cursor: pointer; font-size: 12px; color: #333; transition: background 0.1s; }
   .suggestion-item:hover { background: #f0f4f8; color: #1a3a5c; }
-
-  /* ── Data row ── */
-  .data-row {
-    display: none;
-    align-items: stretch;
-    gap: 10px;
-    margin-top: 0.75rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid #e8ecf1;
-    flex-wrap: wrap;
-  }
-  .data-row.visible { display: flex; }
-
-  .weather-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-    align-items: center;
-    flex: 1;
-    min-width: 220px;
-  }
-  .w-city {
-    width: 100%;
-    font-size: 11px;
-    font-weight: 600;
-    color: #888;
-    font-style: italic;
-    margin-bottom: 2px;
-  }
-  .w-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: #f0f4f8;
-    border-radius: 4px;
-    padding: 4px 10px;
-    min-width: 66px;
-  }
-  .w-card .w-label { font-size: 8.5px; text-transform: uppercase; letter-spacing: 0.5px; color: #999; font-weight: 600; margin-bottom: 1px; }
-  .w-card .w-value { font-size: 13px; font-weight: 700; color: #1a3a5c; }
-
-  /* ── WBGT readout ── */
-  .wbgt-readout {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    padding: 10px 22px;
-    min-width: 150px;
-    flex-shrink: 0;
-    transition: background 0.4s, color 0.4s;
-    border: 2px solid transparent;
-    position: relative;
-    overflow: hidden;
-  }
-  .wbgt-readout::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0.08;
-    background: repeating-linear-gradient(45deg, #fff 0px, #fff 4px, transparent 4px, transparent 10px);
-    pointer-events: none;
-  }
+  .data-row { display: none; gap: 10px; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #e8ecf1; }
+  .data-row.visible { display: flex; align-items: stretch; flex-wrap: wrap; }
+  .weather-left { flex: 1; min-width: 240px; display: flex; flex-direction: column; gap: 6px; }
+  .w-city { font-size: 11px; font-weight: 600; color: #888; font-style: italic; }
+  .chips-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+  .w-card { display: flex; flex-direction: column; align-items: center; background: #f0f4f8; border-radius: 4px; padding: 4px 9px; min-width: 62px; }
+  .w-card .w-label { font-size: 8px; text-transform: uppercase; letter-spacing: 0.5px; color: #999; font-weight: 600; margin-bottom: 1px; white-space: nowrap; }
+  .w-card .w-value { font-size: 12.5px; font-weight: 700; color: #1a3a5c; white-space: nowrap; }
+  .w-card-sun { display: flex; align-items: center; gap: 6px; background: #f0f4f8; border-radius: 4px; padding: 4px 10px; }
+  .sun-item { display: flex; align-items: center; gap: 3px; }
+  .sun-icon { font-size: 12px; line-height: 1; }
+  .sun-time { font-size: 11.5px; font-weight: 700; color: #1a3a5c; }
+  .sun-sep { font-size: 10px; color: #bbb; }
+  .w-card-uv { display: flex; flex-direction: column; align-items: center; border-radius: 4px; padding: 4px 9px; min-width: 52px; border: 1.5px solid transparent; }
+  .w-card-uv .w-label { font-size: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 1px; opacity: 0.75; white-space: nowrap; }
+  .w-card-uv .w-value { font-size: 12.5px; font-weight: 700; }
+  .w-card-uv .uv-tag { font-size: 7.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; opacity: 0.8; margin-top: 1px; white-space: nowrap; }
+  .uv-low      { background: #d4edda; color: #155724; border-color: #b0dbb9; }
+  .uv-moderate { background: #fff3cd; color: #856404; border-color: #f0d870; }
+  .uv-high     { background: #ffe0b2; color: #7b3700; border-color: #f4b97a; }
+  .uv-vhigh    { background: #ef9a9a; color: #7f0000; border-color: #e06666; }
+  .uv-extreme  { background: #e53935; color: #fff;    border-color: #c62828; }
+  .wbgt-readout { display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 6px; padding: 10px 22px; min-width: 148px; flex-shrink: 0; transition: background 0.4s, color 0.4s; border: 2px solid transparent; position: relative; overflow: hidden; }
+  .wbgt-readout::before { content: ''; position: absolute; inset: 0; opacity: 0.08; background: repeating-linear-gradient(45deg,#fff 0px,#fff 4px,transparent 4px,transparent 10px); pointer-events: none; }
   .wbgt-readout .readout-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.75; margin-bottom: 2px; }
   .wbgt-readout .readout-value { font-size: 36px; font-weight: 700; line-height: 1; letter-spacing: -1px; margin-bottom: 4px; }
   .wbgt-readout .readout-unit  { font-size: 12px; opacity: 0.65; margin-left: 2px; font-weight: 400; }
-  .wbgt-readout .readout-risk  { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; padding: 2px 8px; border-radius: 20px; background: rgba(255,255,255,0.3); white-space: nowrap; }
-
+  .wbgt-readout .readout-risk  { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; padding: 2px 8px; border-radius: 20px; background: rgba(255,255,255,0.3); white-space: nowrap; text-align: center; }
   .readout-normal   { background: #d4edda; color: #155724; border-color: #b0dbb9; }
   .readout-caution  { background: #fff3cd; color: #856404; border-color: #f0d870; }
   .readout-xcaution { background: #ffe0b2; color: #7b3700; border-color: #f4b97a; }
   .readout-danger   { background: #ef9a9a; color: #7f0000; border-color: #e06666; }
   .readout-xdanger  { background: #e53935; color: #fff;    border-color: #c62828; }
-
-  /* ── Controls ── */
-  .controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 0.6rem;
-    background: #fff;
-    padding: 0.65rem 1rem;
-    border-radius: 6px;
-    border: 1px solid #e0e4ea;
-  }
+  .controls { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 0.6rem; background: #fff; padding: 0.65rem 1rem; border-radius: 6px; border: 1px solid #e0e4ea; }
   .ctrl-group { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 200px; }
   .ctrl-group label { font-size: 10.5px; color: #444; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
   .ctrl-row { display: flex; align-items: center; gap: 8px; }
   .ctrl-row input[type=range] { flex: 1; accent-color: #1a3a5c; }
   .ctrl-val { font-size: 12.5px; font-weight: 700; min-width: 52px; text-align: right; color: #1a3a5c; }
-
-  /* ── Matrix ── */
-  .matrix-wrap {
-    overflow-x: auto;
-    background: #fff;
-    border-radius: 6px;
-    border: 1px solid #e0e4ea;
-    padding: 0.75rem;
-    margin-bottom: 0.6rem;
-  }
+  .matrix-wrap { overflow-x: auto; background: #fff; border-radius: 6px; border: 1px solid #e0e4ea; padding: 0.75rem; margin-bottom: 0.6rem; }
   table { border-collapse: collapse; font-size: 11px; }
   th { background: #1a3a5c; color: #fff; padding: 4px 6px; text-align: center; font-weight: 600; white-space: nowrap; }
   td { padding: 3px 5px; text-align: center; min-width: 36px; font-size: 11px; border: 0.5px solid rgba(0,0,0,0.07); }
   td.rh-label { background: #1a3a5c; color: #fff; font-weight: 600; padding: 3px 8px; }
-
-  td.live-cell           { outline: 2.5px solid #ff6b00; outline-offset: -2px; position: relative; z-index: 1; }
+  td.live-cell { outline: 2.5px solid #ff6b00; outline-offset: -2px; position: relative; z-index: 1; }
   td.live-cell.pulse-off { outline-color: transparent; }
-
-  /* ── Legend + bottom ── */
-  .legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    font-size: 11.5px;
-    align-items: center;
-    padding: 0.6rem 1rem;
-    background: #fff;
-    border-radius: 6px 6px 0 0;
-    border: 1px solid #e0e4ea;
-    border-bottom: none;
-  }
+  .legend { display: flex; flex-wrap: wrap; gap: 10px; font-size: 11.5px; align-items: center; padding: 0.6rem 1rem; background: #fff; border-radius: 6px 6px 0 0; border: 1px solid #e0e4ea; border-bottom: none; }
   .legend-item { display: flex; align-items: center; gap: 5px; }
   .legend-swatch { width: 12px; height: 12px; border-radius: 2px; border: 0.5px solid rgba(0,0,0,0.18); flex-shrink: 0; }
-
-  .bottom-info {
-    background: #fff;
-    border: 1px solid #e0e4ea;
-    border-top: 1px solid #e8ecf1;
-    border-radius: 0 0 6px 6px;
-    padding: 0.65rem 1rem 0.85rem;
-  }
+  .bottom-info { background: #fff; border: 1px solid #e0e4ea; border-top: 1px solid #e8ecf1; border-radius: 0 0 6px 6px; padding: 0.65rem 1rem 0.85rem; }
   .bottom-info p { font-size: 11px; color: #555; line-height: 1.75; margin-bottom: 0.3rem; }
   .bottom-info p:last-child { margin-bottom: 0; }
   .bottom-info .formula-line { font-style: italic; color: #999; font-size: 10.5px; }
 </style>
 </head>
 <body>
-
 <div class="lang-bar">
-  <button class="lang-btn active" onclick="setLang('en')"><span class="flag">🇺🇸</span> EN</button>
-  <button class="lang-btn" onclick="setLang('es')"><span class="flag">🇲🇽</span> ES</button>
-  <button class="lang-btn" onclick="setLang('pt')"><span class="flag">🇧🇷</span> PT</button>
-  <button class="lang-btn" onclick="setLang('fr')"><span class="flag">🇫🇷</span> FR</button>
+  <button class="lang-btn active" onclick="setLang('en')"><span class="flag">&#127482;&#127480;</span> EN</button>
+  <button class="lang-btn" onclick="setLang('es')"><span class="flag">&#127474;&#127485;</span> ES</button>
+  <button class="lang-btn" onclick="setLang('pt')"><span class="flag">&#127463;&#127479;</span> PT</button>
+  <button class="lang-btn" onclick="setLang('fr')"><span class="flag">&#127467;&#127479;</span> FR</button>
 </div>
-
 <header>
   <h1 id="t-title"></h1>
   <p id="t-desc"></p>
 </header>
-
 <div class="live-panel">
   <div class="search-row">
     <span class="search-label" id="t-search-label"></span>
@@ -286,44 +103,54 @@
     </div>
   </div>
   <div class="data-row" id="dataRow">
-    <div class="weather-chips">
+    <div class="weather-left">
       <span class="w-city" id="w-city"></span>
-      <div class="w-card"><span class="w-label" id="wl-temp"></span><span class="w-value" id="w-temp">—</span></div>
-      <div class="w-card"><span class="w-label" id="wl-hum"></span><span class="w-value"  id="w-hum">—</span></div>
-      <div class="w-card"><span class="w-label" id="wl-pres"></span><span class="w-value" id="w-pres">—</span></div>
-      <div class="w-card"><span class="w-label" id="wl-cloud"></span><span class="w-value" id="w-cloud">—</span></div>
+      <div class="chips-grid">
+        <div class="w-card"><span class="w-label" id="wl-temp"></span><span class="w-value" id="w-temp">--</span></div>
+        <div class="w-card"><span class="w-label" id="wl-hum"></span><span class="w-value" id="w-hum">--</span></div>
+        <div class="w-card"><span class="w-label" id="wl-pres"></span><span class="w-value" id="w-pres">--</span></div>
+        <div class="w-card"><span class="w-label" id="wl-cloud"></span><span class="w-value" id="w-cloud">--</span></div>
+        <div class="w-card"><span class="w-label" id="wl-hi"></span><span class="w-value" id="w-hi">--</span></div>
+        <div class="w-card-uv" id="uv-chip">
+          <span class="w-label" id="wl-uv"></span>
+          <span class="w-value" id="w-uv">--</span>
+          <span class="uv-tag" id="w-uv-tag"></span>
+        </div>
+        <div class="w-card-sun">
+          <div class="sun-item"><span class="sun-icon">&#127749;</span><span class="sun-time" id="w-sunrise">--</span></div>
+          <span class="sun-sep">&#183;</span>
+          <div class="sun-item"><span class="sun-icon">&#127751;</span><span class="sun-time" id="w-sunset">--</span></div>
+        </div>
+      </div>
     </div>
     <div class="wbgt-readout" id="wbgtReadout">
       <span class="readout-label">WBGT</span>
-      <span class="readout-value" id="readout-value">—<span class="readout-unit">°C</span></span>
+      <span class="readout-value" id="readout-value">--<span class="readout-unit">&#176;C</span></span>
       <span class="readout-risk" id="readout-risk"></span>
     </div>
   </div>
 </div>
-
 <div class="controls">
   <div class="ctrl-group">
     <label id="t-cloud-label"></label>
     <div class="ctrl-row">
-      <span style="font-size:15px;line-height:1">☀️</span>
+      <span style="font-size:15px;line-height:1">&#9728;&#65039;</span>
       <input type="range" id="cloud" min="0" max="100" step="5" value="0">
-      <span style="font-size:15px;line-height:1">☁️</span>
+      <span style="font-size:15px;line-height:1">&#9729;&#65039;</span>
       <span class="ctrl-val" id="cloud-val">0%</span>
     </div>
   </div>
   <div class="ctrl-group">
     <label id="t-pressure-label"></label>
     <div class="ctrl-row">
-      <input type="range" id="pressure" min="600" max="1060" step="10" value="1013">
+      <input type="range" id="pressure" min="600" max="1080" step="10" value="1013">
       <span class="ctrl-val" id="pressure-val">1013 hPa</span>
     </div>
   </div>
 </div>
-
 <div class="matrix-wrap">
   <table id="wbgt-table"></table>
 </div>
-
 <div class="legend">
   <div class="legend-item"><div class="legend-swatch" style="background:#d4edda"></div><span id="l0"></span></div>
   <div class="legend-item"><div class="legend-swatch" style="background:#fff3cd"></div><span id="l1"></span></div>
@@ -335,285 +162,100 @@
   <p id="t-explain"></p>
   <p class="formula-line" id="t-formula"></p>
 </div>
-
 <script>
-// ── Proxy URL (API key lives in Cloudflare Worker, not here) ──
 var PROXY = 'https://polished-limit-87cf.itoshmi.workers.dev';
-
 var LANGS = {
   en: {
     title: 'WBGT Heat Stress Calculator',
     desc: 'Search your city to get live conditions. The matrix shows your WBGT heat stress index — adjust sky and altitude sliders to refine.',
-    searchLabel: '🔍 City',
-    cloudLabel: '☁ Sky Conditions',
-    pressureLabel: '⚖ Altitude / Pressure (hPa)',
-    tempHeader: 'Temperature (°C)',
+    searchLabel: 'City',
+    cloudLabel: 'Sky Conditions',
+    pressureLabel: 'Altitude / Pressure (hPa)',
+    tempHeader: 'Temperature (C)',
     rhHeader: 'Humidity %',
-    cityPlaceholder: 'Type a city…',
-    wlTemp: 'Temp', wlHum: 'Humidity', wlPres: 'Pressure', wlCloud: 'Cloud',
-    legend: ['<25 — Normal','25–27.9 — Caution','28–29.4 — Extreme Caution','29.5–31.9 — Danger','≥32 — Extreme Danger'],
-    risks: ['Normal','Caution','Extreme Caution','Danger','Extreme Danger'],
-    explain: 'The matrix displays the Wet Bulb Globe Temperature (WBGT, °C) — a heat stress index that combines air temperature, humidity, and solar radiation. The highlighted cell shows your current conditions. Below 25 °C is generally safe; above 28 °C, outdoor workers and athletes should reduce exertion and take more rest; above 32 °C, prolonged exposure is dangerous. Pv (vapor pressure, hPa) is an intermediate variable representing the moisture content of the air — it is not what the matrix displays, but it drives how strongly humidity raises the WBGT.',
-    formula: 'Formula (Epstein): WBGT = 0.567·T + 0.393·Pv + 3.94·(1 − cloud/100)  |  Pv = (RH/100)·6.105·e^(17.27·T/(237.7+T))·(P/1013.25)  |  Ref: Prof. Yoram Epstein'
+    cityPlaceholder: 'Type a city...',
+    wlTemp:'Temp', wlHum:'Humidity', wlPres:'Pressure', wlCloud:'Cloud', wlHi:'Heat Index', wlUv:'UV',
+    uvTags:['Low','Low','Moderate','Moderate','Moderate','Moderate','High','High','Very High','Very High','Very High','Extreme'],
+    legend:['<25 Normal','25-27.9 Caution','28-29.4 Extreme Caution','29.5-31.9 Danger','>=32 Extreme Danger'],
+    risks:['Normal','Caution','Extreme Caution','Danger','Extreme Danger'],
+    explain:'The matrix displays the Wet Bulb Globe Temperature (WBGT, C) -- a heat stress index combining air temperature, humidity, and solar radiation. The highlighted cell shows your current conditions. Below 25 C is generally safe; above 28 C, outdoor workers and athletes should reduce exertion and rest more; above 32 C, prolonged exposure is dangerous. Pv (vapor pressure, hPa) is an intermediate variable representing air moisture content -- it is not what the matrix displays, but it determines how strongly humidity raises WBGT.',
+    formula:'Formula (Epstein): WBGT = 0.567*T + 0.393*Pv + 3.94*(1 - cloud/100) | Pv = (RH/100)*6.105*e^(17.27*T/(237.7+T))*(P/1013.25) | Ref: Prof. Yoram Epstein'
   },
   es: {
-    title: 'Calculadora de Estrés Térmico WBGT',
-    desc: 'Busca tu ciudad para obtener condiciones en tiempo real. La tabla muestra tu índice WBGT — ajusta los controles para refinar.',
-    searchLabel: '🔍 Ciudad',
-    cloudLabel: '☁ Condiciones del Cielo',
-    pressureLabel: '⚖ Altitud / Presión (hPa)',
-    tempHeader: 'Temperatura (°C)',
+    title: 'Calculadora de Estres Termico WBGT',
+    desc: 'Busca tu ciudad para obtener condiciones en tiempo real. La tabla muestra tu indice WBGT -- ajusta los controles para refinar.',
+    searchLabel: 'Ciudad',
+    cloudLabel: 'Condiciones del Cielo',
+    pressureLabel: 'Altitud / Presion (hPa)',
+    tempHeader: 'Temperatura (C)',
     rhHeader: 'Humedad %',
-    cityPlaceholder: 'Escribe una ciudad…',
-    wlTemp: 'Temp', wlHum: 'Humedad', wlPres: 'Presión', wlCloud: 'Nubosidad',
-    legend: ['<25 — Normal','25–27.9 — Precaución','28–29.4 — Precaución Extrema','29.5–31.9 — Peligro','≥32 — Peligro Extremo'],
-    risks: ['Normal','Precaución','Precaución Extrema','Peligro','Peligro Extremo'],
-    explain: 'La tabla muestra el Índice de Temperatura de Globo de Bulbo Húmedo (WBGT, °C), que combina temperatura, humedad y radiación solar. La celda resaltada indica tus condiciones actuales. Por debajo de 25 °C las condiciones son seguras; entre 28 y 32 °C, los trabajadores y atletas deben reducir el esfuerzo y aumentar los descansos; por encima de 32 °C la exposición prolongada es peligrosa. La presión de vapor (Pv, hPa) es una variable intermedia que representa el contenido de humedad del aire — no es lo que muestra la tabla, pero determina cuánto eleva la humedad el WBGT.',
-    formula: 'Fórmula (Epstein): WBGT = 0.567·T + 0.393·Pv + 3.94·(1 − nubosidad/100)  |  Pv = (HR/100)·6.105·e^(17.27·T/(237.7+T))·(P/1013.25)  |  Ref: Prof. Yoram Epstein'
+    cityPlaceholder: 'Escribe una ciudad...',
+    wlTemp:'Temp', wlHum:'Humedad', wlPres:'Presion', wlCloud:'Nubosidad', wlHi:'Indice de Calor', wlUv:'UV',
+    uvTags:['Bajo','Bajo','Moderado','Moderado','Moderado','Moderado','Alto','Alto','Muy Alto','Muy Alto','Muy Alto','Extremo'],
+    legend:['<25 Normal','25-27.9 Precaucion','28-29.4 Precaucion Extrema','29.5-31.9 Peligro','>=32 Peligro Extremo'],
+    risks:['Normal','Precaucion','Precaucion Extrema','Peligro','Peligro Extremo'],
+    explain:'La tabla muestra el Indice de Temperatura de Globo de Bulbo Humedo (WBGT, C), que combina temperatura, humedad y radiacion solar. La celda resaltada indica tus condiciones actuales. Por debajo de 25 C las condiciones son seguras; entre 28 y 32 C, los trabajadores y atletas deben reducir el esfuerzo y aumentar los descansos; por encima de 32 C la exposicion prolongada es peligrosa. La presion de vapor (Pv, hPa) es una variable intermedia que representa el contenido de humedad del aire -- no es lo que muestra la tabla, pero determina cuanto eleva la humedad el WBGT.',
+    formula:'Formula (Epstein): WBGT = 0.567*T + 0.393*Pv + 3.94*(1 - nubosidad/100) | Pv = (HR/100)*6.105*e^(17.27*T/(237.7+T))*(P/1013.25) | Ref: Prof. Yoram Epstein'
   },
   pt: {
-    title: 'Calculadora de Estresse Térmico WBGT',
-    desc: 'Pesquise sua cidade para obter condições ao vivo. A tabela mostra seu índice WBGT — ajuste os controles para refinar.',
-    searchLabel: '🔍 Cidade',
-    cloudLabel: '☁ Condições do Céu',
-    pressureLabel: '⚖ Altitude / Pressão (hPa)',
-    tempHeader: 'Temperatura (°C)',
+    title: 'Calculadora de Estresse Termico WBGT',
+    desc: 'Pesquise sua cidade para obter condicoes ao vivo. A tabela mostra seu indice WBGT -- ajuste os controles para refinar.',
+    searchLabel: 'Cidade',
+    cloudLabel: 'Condicoes do Ceu',
+    pressureLabel: 'Altitude / Pressao (hPa)',
+    tempHeader: 'Temperatura (C)',
     rhHeader: 'Umidade %',
-    cityPlaceholder: 'Digite uma cidade…',
-    wlTemp: 'Temp', wlHum: 'Umidade', wlPres: 'Pressão', wlCloud: 'Nuvens',
-    legend: ['<25 — Normal','25–27.9 — Atenção','28–29.4 — Atenção Extrema','29.5–31.9 — Perigo','≥32 — Perigo Extremo'],
-    risks: ['Normal','Atenção','Atenção Extrema','Perigo','Perigo Extremo'],
-    explain: 'A tabela exibe o Índice de Temperatura de Globo de Bulbo Úmido (WBGT, °C), que combina temperatura, umidade e radiação solar. A célula destacada indica suas condições atuais. Abaixo de 25 °C as condições são seguras; entre 28 e 32 °C, trabalhadores e atletas devem reduzir o esforço e aumentar os intervalos; acima de 32 °C a exposição prolongada é perigosa. A pressão de vapor (Pv, hPa) é uma variável intermediária que representa a umidade do ar — não é o que a tabela exibe, mas determina o quanto a umidade eleva o WBGT.',
-    formula: 'Fórmula (Epstein): WBGT = 0.567·T + 0.393·Pv + 3.94·(1 − nuvens/100)  |  Pv = (UR/100)·6.105·e^(17.27·T/(237.7+T))·(P/1013.25)  |  Ref: Prof. Yoram Epstein'
+    cityPlaceholder: 'Digite uma cidade...',
+    wlTemp:'Temp', wlHum:'Umidade', wlPres:'Pressao', wlCloud:'Nuvens', wlHi:'Indice de Calor', wlUv:'UV',
+    uvTags:['Baixo','Baixo','Moderado','Moderado','Moderado','Moderado','Alto','Alto','Muito Alto','Muito Alto','Muito Alto','Extremo'],
+    legend:['<25 Normal','25-27.9 Atencao','28-29.4 Atencao Extrema','29.5-31.9 Perigo','>=32 Perigo Extremo'],
+    risks:['Normal','Atencao','Atencao Extrema','Perigo','Perigo Extremo'],
+    explain:'A tabela exibe o Indice de Temperatura de Globo de Bulbo Umido (WBGT, C), que combina temperatura, umidade e radiacao solar. A celula destacada indica suas condicoes atuais. Abaixo de 25 C as condicoes sao seguras; entre 28 e 32 C, trabalhadores e atletas devem reduzir o esforco e aumentar os intervalos; acima de 32 C a exposicao prolongada e perigosa. A pressao de vapor (Pv, hPa) e uma variavel intermediaria que representa a umidade do ar -- nao e o que a tabela exibe, mas determina o quanto a umidade eleva o WBGT.',
+    formula:'Formula (Epstein): WBGT = 0.567*T + 0.393*Pv + 3.94*(1 - nuvens/100) | Pv = (UR/100)*6.105*e^(17.27*T/(237.7+T))*(P/1013.25) | Ref: Prof. Yoram Epstein'
   },
   fr: {
     title: 'Calculateur de Stress Thermique WBGT',
-    desc: "Recherchez votre ville pour obtenir les conditions en direct. Le tableau affiche votre indice WBGT — ajustez les curseurs pour affiner.",
-    searchLabel: '🔍 Ville',
-    cloudLabel: '☁ Conditions du Ciel',
-    pressureLabel: '⚖ Altitude / Pression (hPa)',
-    tempHeader: 'Température (°C)',
-    rhHeader: 'Humidité %',
-    cityPlaceholder: 'Tapez une ville…',
-    wlTemp: 'Temp', wlHum: 'Humidité', wlPres: 'Pression', wlCloud: 'Nuages',
-    legend: ['<25 — Normal','25–27.9 — Prudence','28–29.4 — Prudence Extrême','29.5–31.9 — Danger','≥32 — Danger Extrême'],
-    risks: ['Normal','Prudence','Prudence Extrême','Danger','Danger Extrême'],
-    explain: "Le tableau affiche la Température de Globe à Bulbe Humide (WBGT, °C), qui combine la température, l'humidité et le rayonnement solaire. La cellule mise en évidence indique vos conditions actuelles. En dessous de 25 °C les conditions sont sûres ; entre 28 et 32 °C, les travailleurs et sportifs doivent réduire l'effort et augmenter les pauses ; au-delà de 32 °C l'exposition prolongée est dangereuse. La pression de vapeur (Pv, hPa) est une variable intermédiaire représentant la teneur en humidité de l'air — ce n'est pas ce qu'affiche le tableau, mais elle détermine dans quelle mesure l'humidité fait monter le WBGT.",
-    formula: 'Formule (Epstein) : WBGT = 0.567·T + 0.393·Pv + 3.94·(1 − nuages/100)  |  Pv = (HR/100)·6.105·e^(17.27·T/(237.7+T))·(P/1013.25)  |  Réf : Prof. Yoram Epstein'
+    desc: "Recherchez votre ville pour obtenir les conditions en direct. Le tableau affiche votre indice WBGT -- ajustez les curseurs pour affiner.",
+    searchLabel: 'Ville',
+    cloudLabel: 'Conditions du Ciel',
+    pressureLabel: 'Altitude / Pression (hPa)',
+    tempHeader: 'Temperature (C)',
+    rhHeader: 'Humidite %',
+    cityPlaceholder: 'Tapez une ville...',
+    wlTemp:'Temp', wlHum:'Humidite', wlPres:'Pression', wlCloud:'Nuages', wlHi:'Indice de Chaleur', wlUv:'UV',
+    uvTags:['Faible','Faible','Modere','Modere','Modere','Modere','Eleve','Eleve','Tres Eleve','Tres Eleve','Tres Eleve','Extreme'],
+    legend:['<25 Normal','25-27.9 Prudence','28-29.4 Prudence Extreme','29.5-31.9 Danger','>=32 Danger Extreme'],
+    risks:['Normal','Prudence','Prudence Extreme','Danger','Danger Extreme'],
+    explain:"Le tableau affiche la Temperature de Globe a Bulbe Humide (WBGT, C), qui combine la temperature, l'humidite et le rayonnement solaire. La cellule mise en evidence indique vos conditions actuelles. En dessous de 25 C les conditions sont sures; entre 28 et 32 C, les travailleurs et sportifs doivent reduire l'effort et augmenter les pauses; au-dela de 32 C l'exposition prolongee est dangereuse. La pression de vapeur (Pv, hPa) est une variable intermediaire representant la teneur en humidite de l'air -- ce n'est pas ce qu'affiche le tableau, mais elle determine dans quelle mesure l'humidite fait monter le WBGT.",
+    formula:"Formule (Epstein) : WBGT = 0.567*T + 0.393*Pv + 3.94*(1 - nuages/100) | Pv = (HR/100)*6.105*e^(17.27*T/(237.7+T))*(P/1013.25) | Ref : Prof. Yoram Epstein"
   }
 };
-
-var TEMPS = [20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50];
-var RHS   = [0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100];
-var currentLang = 'en';
-var liveTemp = null;
-var liveRH   = null;
-var pulseInterval = null;
-var pulseOn = true;
-
-function snapCeil(val, arr) {
-  for (var i = 0; i < arr.length; i++) { if (arr[i] >= val) return arr[i]; }
-  return arr[arr.length - 1];
-}
-
-function calcWBGT(T, RH, cloud, pressure) {
-  var pf = pressure / 1013.25;
-  var Pv = (RH / 100) * 6.105 * Math.exp((17.27 * T) / (237.7 + T)) * pf;
-  return 0.567 * T + 0.393 * Pv + 3.94 * (1 - cloud / 100);
-}
-
-function getRiskIndex(w) {
-  if (w < 25)   return 0;
-  if (w < 28)   return 1;
-  if (w < 29.5) return 2;
-  if (w < 32)   return 3;
-  return 4;
-}
-
-function getColor(w) {
-  var themes = [
-    { bg: '#d4edda', text: '#155724' },
-    { bg: '#fff3cd', text: '#856404' },
-    { bg: '#ffe0b2', text: '#7b3700' },
-    { bg: '#ef9a9a', text: '#7f0000' },
-    { bg: '#e53935', text: '#fff'    }
-  ];
-  return themes[getRiskIndex(w)];
-}
-
-var readoutClasses = ['readout-normal','readout-caution','readout-xcaution','readout-danger','readout-xdanger'];
-
-function updateReadout(wbgt) {
-  var ri  = getRiskIndex(wbgt);
-  var box = document.getElementById('wbgtReadout');
-  readoutClasses.forEach(function(c) { box.classList.remove(c); });
-  box.classList.add(readoutClasses[ri]);
-  document.getElementById('readout-value').innerHTML = wbgt.toFixed(1) + '<span class="readout-unit">°C</span>';
-  document.getElementById('readout-risk').textContent = LANGS[currentLang].risks[ri];
-}
-
-function startPulse() {
-  if (pulseInterval) clearInterval(pulseInterval);
-  pulseOn = true;
-  pulseInterval = setInterval(function() {
-    var cell = document.querySelector('td.live-cell');
-    if (!cell) { clearInterval(pulseInterval); pulseInterval = null; return; }
-    pulseOn = !pulseOn;
-    cell.classList.toggle('pulse-off', !pulseOn);
-  }, 600);
-}
-
-function buildTable() {
-  var cloud    = +document.getElementById('cloud').value;
-  var pressure = +document.getElementById('pressure').value;
-  var L = LANGS[currentLang];
-  var snapT  = (liveTemp !== null) ? snapCeil(liveTemp, TEMPS) : null;
-  var snapRH = (liveRH   !== null) ? snapCeil(liveRH,   RHS)   : null;
-
-  if (snapT !== null && snapRH !== null) {
-    updateReadout(calcWBGT(snapT, snapRH, cloud, pressure));
-  }
-
-  var html = '<thead><tr>';
-  html += '<th rowspan="2" style="background:#1a3a5c;min-width:28px;max-width:28px;padding:0;vertical-align:middle;">'
-        + '<div style="writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;font-size:9.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#a8c4e0;padding:10px 6px;">'
-        + L.rhHeader + '</div></th>';
-  html += '<th colspan="' + TEMPS.length + '" style="background:#1a3a5c;color:#a8c4e0;text-align:center;padding:5px 8px;font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.1);">'
-        + '— ' + L.tempHeader + ' —</th>';
-  html += '</tr><tr>';
-  TEMPS.forEach(function(t) {
-    html += '<th style="background:#243f5e;color:#e8f0f8;padding:4px 5px;font-size:10.5px;font-weight:700;min-width:36px;">' + t + '</th>';
-  });
-  html += '</tr></thead><tbody>';
-
-  RHS.forEach(function(rh) {
-    html += '<tr><td class="rh-label">' + rh + '</td>';
-    TEMPS.forEach(function(t) {
-      var w = calcWBGT(t, rh, cloud, pressure);
-      var c = getColor(w);
-      var isLive = (snapT !== null && snapRH !== null && t === snapT && rh === snapRH);
-      var cls = isLive ? ' class="live-cell"' : '';
-      html += '<td' + cls + ' style="background:' + c.bg + ';color:' + c.text + ';font-weight:500">' + w.toFixed(1) + '</td>';
-    });
-    html += '</tr>';
-  });
-  html += '</tbody>';
-  document.getElementById('wbgt-table').innerHTML = html;
-  if (snapT !== null) startPulse();
-}
-
-function applyLang(code) {
-  var L = LANGS[code];
-  document.documentElement.lang = code;
-  document.getElementById('t-title').textContent          = L.title;
-  document.getElementById('t-desc').textContent           = L.desc;
-  document.getElementById('t-search-label').textContent   = L.searchLabel;
-  document.getElementById('t-cloud-label').textContent    = L.cloudLabel;
-  document.getElementById('t-pressure-label').textContent = L.pressureLabel;
-  document.getElementById('cityInput').placeholder        = L.cityPlaceholder;
-  document.getElementById('wl-temp').textContent          = L.wlTemp;
-  document.getElementById('wl-hum').textContent           = L.wlHum;
-  document.getElementById('wl-pres').textContent          = L.wlPres;
-  document.getElementById('wl-cloud').textContent         = L.wlCloud;
-  document.getElementById('t-explain').textContent        = L.explain;
-  document.getElementById('t-formula').textContent        = L.formula;
-  L.legend.forEach(function(txt, i) {
-    document.getElementById('l' + i).textContent = txt;
-  });
-  var snapT  = (liveTemp !== null) ? snapCeil(liveTemp, TEMPS) : null;
-  var snapRH = (liveRH   !== null) ? snapCeil(liveRH,   RHS)   : null;
-  if (snapT !== null && snapRH !== null) {
-    updateReadout(calcWBGT(snapT, snapRH,
-      +document.getElementById('cloud').value,
-      +document.getElementById('pressure').value));
-  }
-  buildTable();
-}
-
-function setLang(code) {
-  currentLang = code;
-  document.querySelectorAll('.lang-btn').forEach(function(btn) {
-    btn.classList.toggle('active', btn.getAttribute('onclick') === "setLang('" + code + "')");
-  });
-  applyLang(code);
-}
-
-document.getElementById('cloud').addEventListener('input', function() {
-  document.getElementById('cloud-val').textContent = this.value + '%';
-  buildTable();
-});
-document.getElementById('pressure').addEventListener('input', function() {
-  document.getElementById('pressure-val').textContent = this.value + ' hPa';
-  buildTable();
-});
-
+var TEMPS=[20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50];
+var RHS=[0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100];
+var currentLang='en', liveTemp=null, liveRH=null, pulseInterval=null, pulseOn=true;
+function getUvClass(uv){if(uv<=2)return'uv-low';if(uv<=5)return'uv-moderate';if(uv<=7)return'uv-high';if(uv<=10)return'uv-vhigh';return'uv-extreme';}
+function getUvTag(uv){var idx=Math.min(Math.round(uv),11);return LANGS[currentLang].uvTags[idx]||LANGS[currentLang].uvTags[11];}
+function updateUvChip(uv){var chip=document.getElementById('uv-chip');['uv-low','uv-moderate','uv-high','uv-vhigh','uv-extreme'].forEach(function(c){chip.classList.remove(c);});chip.classList.add(getUvClass(uv));document.getElementById('w-uv').textContent=uv;document.getElementById('w-uv-tag').textContent=getUvTag(uv);}
+function snapCeil(val,arr){for(var i=0;i<arr.length;i++){if(arr[i]>=val)return arr[i];}return arr[arr.length-1];}
+function calcWBGT(T,RH,cloud,pressure){var pf=pressure/1013.25;var Pv=(RH/100)*6.105*Math.exp((17.27*T)/(237.7+T))*pf;return 0.567*T+0.393*Pv+3.94*(1-cloud/100);}
+function getRiskIndex(w){if(w<25)return 0;if(w<28)return 1;if(w<29.5)return 2;if(w<32)return 3;return 4;}
+function getColor(w){return[{bg:'#d4edda',text:'#155724'},{bg:'#fff3cd',text:'#856404'},{bg:'#ffe0b2',text:'#7b3700'},{bg:'#ef9a9a',text:'#7f0000'},{bg:'#e53935',text:'#fff'}][getRiskIndex(w)];}
+var readoutClasses=['readout-normal','readout-caution','readout-xcaution','readout-danger','readout-xdanger'];
+function updateReadout(wbgt){var ri=getRiskIndex(wbgt);var box=document.getElementById('wbgtReadout');readoutClasses.forEach(function(c){box.classList.remove(c);});box.classList.add(readoutClasses[ri]);document.getElementById('readout-value').innerHTML=wbgt.toFixed(1)+'<span class="readout-unit">C</span>';document.getElementById('readout-risk').textContent=LANGS[currentLang].risks[ri];}
+function startPulse(){if(pulseInterval)clearInterval(pulseInterval);pulseOn=true;pulseInterval=setInterval(function(){var cell=document.querySelector('td.live-cell');if(!cell){clearInterval(pulseInterval);pulseInterval=null;return;}pulseOn=!pulseOn;cell.classList.toggle('pulse-off',!pulseOn);},600);}
+function buildTable(){var cloud=+document.getElementById('cloud').value;var pressure=+document.getElementById('pressure').value;var L=LANGS[currentLang];var snapT=(liveTemp!==null)?snapCeil(liveTemp,TEMPS):null;var snapRH=(liveRH!==null)?snapCeil(liveRH,RHS):null;if(snapT!==null&&snapRH!==null){updateReadout(calcWBGT(snapT,snapRH,cloud,pressure));}var html='<thead><tr>';html+='<th rowspan="2" style="background:#1a3a5c;min-width:28px;max-width:28px;padding:0;vertical-align:middle;"><div style="writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;font-size:9.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#a8c4e0;padding:10px 6px;">'+L.rhHeader+'</div></th>';html+='<th colspan="'+TEMPS.length+'" style="background:#1a3a5c;color:#a8c4e0;text-align:center;padding:5px 8px;font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.1);">-- '+L.tempHeader+' --</th>';html+='</tr><tr>';TEMPS.forEach(function(t){html+='<th style="background:#243f5e;color:#e8f0f8;padding:4px 5px;font-size:10.5px;font-weight:700;min-width:36px;">'+t+'</th>';});html+='</tr></thead><tbody>';RHS.forEach(function(rh){html+='<tr><td class="rh-label">'+rh+'</td>';TEMPS.forEach(function(t){var w=calcWBGT(t,rh,cloud,pressure);var c=getColor(w);var isLive=(snapT!==null&&snapRH!==null&&t===snapT&&rh===snapRH);var cls=isLive?' class="live-cell"':'';html+='<td'+cls+' style="background:'+c.bg+';color:'+c.text+';font-weight:500">'+w.toFixed(1)+'</td>';});html+='</tr>';});html+='</tbody>';document.getElementById('wbgt-table').innerHTML=html;if(snapT!==null)startPulse();}
+function applyLang(code){var L=LANGS[code];document.documentElement.lang=code;document.getElementById('t-title').textContent=L.title;document.getElementById('t-desc').textContent=L.desc;document.getElementById('t-search-label').textContent=L.searchLabel;document.getElementById('t-cloud-label').textContent=L.cloudLabel;document.getElementById('t-pressure-label').textContent=L.pressureLabel;document.getElementById('cityInput').placeholder=L.cityPlaceholder;document.getElementById('wl-temp').textContent=L.wlTemp;document.getElementById('wl-hum').textContent=L.wlHum;document.getElementById('wl-pres').textContent=L.wlPres;document.getElementById('wl-cloud').textContent=L.wlCloud;document.getElementById('wl-hi').textContent=L.wlHi;document.getElementById('wl-uv').textContent=L.wlUv;document.getElementById('t-explain').textContent=L.explain;document.getElementById('t-formula').textContent=L.formula;L.legend.forEach(function(txt,i){document.getElementById('l'+i).textContent=txt;});var uvVal=document.getElementById('w-uv').textContent;if(uvVal!=='--')updateUvChip(parseFloat(uvVal));var snapT=(liveTemp!==null)?snapCeil(liveTemp,TEMPS):null;var snapRH=(liveRH!==null)?snapCeil(liveRH,RHS):null;if(snapT!==null&&snapRH!==null){updateReadout(calcWBGT(snapT,snapRH,+document.getElementById('cloud').value,+document.getElementById('pressure').value));}buildTable();}
+function setLang(code){currentLang=code;document.querySelectorAll('.lang-btn').forEach(function(btn){btn.classList.toggle('active',btn.getAttribute('onclick')==="setLang('"+code+"')");});applyLang(code);}
+document.getElementById('cloud').addEventListener('input',function(){document.getElementById('cloud-val').textContent=this.value+'%';buildTable();});
+document.getElementById('pressure').addEventListener('input',function(){document.getElementById('pressure-val').textContent=this.value+' hPa';buildTable();});
 var debounceTimer;
-var cityInput   = document.getElementById('cityInput');
-var suggestions = document.getElementById('suggestions');
-var spinner     = document.getElementById('spinner');
-
-cityInput.addEventListener('input', function() {
-  clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(searchCities, 320);
-});
-
-async function searchCities() {
-  var q = cityInput.value.trim();
-  suggestions.innerHTML = '';
-  if (q.length < 2) return;
-  spinner.style.display = 'block';
-  try {
-    var res  = await fetch(PROXY + '?endpoint=search&q=' + encodeURIComponent(q));
-    var list = await res.json();
-    list.forEach(function(city) {
-      var div = document.createElement('div');
-      div.className = 'suggestion-item';
-      div.textContent = city.name + ', ' + city.region + ', ' + city.country;
-      div.onclick = function() {
-        cityInput.value = city.name + ', ' + city.country;
-        suggestions.innerHTML = '';
-        fetchWeather(city.name + ',' + city.lat + ',' + city.lon);
-      };
-      suggestions.appendChild(div);
-    });
-  } catch(e) { console.error('Search error', e); }
-  spinner.style.display = 'none';
-}
-
-async function fetchWeather(query) {
-  spinner.style.display = 'block';
-  try {
-    var res  = await fetch(PROXY + '?endpoint=current&q=' + encodeURIComponent(query));
-    var data = await res.json();
-    var cur  = data.current;
-
-    liveTemp = cur.temp_c;
-    liveRH   = cur.humidity;
-
-    var pressure = Math.max(600, Math.min(1060, Math.round(cur.pressure_mb / 10) * 10));
-    var cloud    = Math.max(0,   Math.min(100,  Math.round(cur.cloud / 5) * 5));
-
-    document.getElementById('w-city').textContent  = data.location.name + ', ' + data.location.country;
-    document.getElementById('w-temp').textContent  = cur.temp_c.toFixed(1) + ' °C';
-    document.getElementById('w-hum').textContent   = cur.humidity + '%';
-    document.getElementById('w-pres').textContent  = cur.pressure_mb + ' hPa';
-    document.getElementById('w-cloud').textContent = cur.cloud + '%';
-    document.getElementById('dataRow').classList.add('visible');
-
-    document.getElementById('cloud').value    = cloud;
-    document.getElementById('pressure').value = pressure;
-    document.getElementById('cloud-val').textContent    = cloud + '%';
-    document.getElementById('pressure-val').textContent = pressure + ' hPa';
-
-    buildTable();
-  } catch(e) { console.error('Weather fetch error', e); }
-  spinner.style.display = 'none';
-}
-
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.search-wrap')) suggestions.innerHTML = '';
-});
-
+var cityInput=document.getElementById('cityInput');
+var suggestions=document.getElementById('suggestions');
+var spinner=document.getElementById('spinner');
+cityInput.addEventListener('input',function(){clearTimeout(debounceTimer);debounceTimer=setTimeout(searchCities,320);});
+async function searchCities(){var q=cityInput.value.trim();suggestions.innerHTML='';if(q.length<2)return;spinner.style.display='block';try{var res=await fetch(PROXY+'?endpoint=search&q='+encodeURIComponent(q));var list=await res.json();list.forEach(function(city){var div=document.createElement('div');div.className='suggestion-item';div.textContent=city.name+', '+city.region+', '+city.country;div.onclick=function(){cityInput.value=city.name+', '+city.country;suggestions.innerHTML='';fetchWeather(city.name+','+city.lat+','+city.lon);};suggestions.appendChild(div);});}catch(e){console.error('Search error',e);}spinner.style.display='none';}
+async function fetchWeather(query){spinner.style.display='block';try{var res=await fetch(PROXY+'?endpoint=forecast&q='+encodeURIComponent(query)+'&days=1&aqi=no&alerts=no');var data=await res.json();var cur=data.current;var astro=data.forecast.forecastday[0].astro;liveTemp=cur.temp_c;liveRH=cur.humidity;var pressure=Math.max(600,Math.min(1080,Math.round(cur.pressure_mb/10)*10));var cloud=Math.max(0,Math.min(100,Math.round(cur.cloud/5)*5));document.getElementById('w-city').textContent=data.location.name+', '+data.location.country;document.getElementById('w-temp').textContent=cur.temp_c.toFixed(1)+' C';document.getElementById('w-hum').textContent=cur.humidity+'%';document.getElementById('w-pres').textContent=cur.pressure_mb+' hPa';document.getElementById('w-cloud').textContent=cur.cloud+'%';document.getElementById('w-hi').textContent=cur.heatindex_c.toFixed(1)+' C';document.getElementById('w-sunrise').textContent=astro.sunrise;document.getElementById('w-sunset').textContent=astro.sunset;updateUvChip(cur.uv);document.getElementById('dataRow').classList.add('visible');document.getElementById('cloud').value=cloud;document.getElementById('pressure').value=pressure;document.getElementById('cloud-val').textContent=cloud+'%';document.getElementById('pressure-val').textContent=pressure+' hPa';buildTable();}catch(e){console.error('Weather fetch error',e);}spinner.style.display='none';}
+document.addEventListener('click',function(e){if(!e.target.closest('.search-wrap'))suggestions.innerHTML='';});
 applyLang('en');
 </script>
 </body>
