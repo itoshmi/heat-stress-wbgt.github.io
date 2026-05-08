@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -246,9 +245,9 @@ var LANGS = {
 var TEMPS=[20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50];
 var RHS=[0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100];
 var currentLang='en', liveTemp=null, liveRH=null, liveUV=null, liveHI=null, pulseInterval=null, pulseOn=true;
-function getUvClass(uv){if(uv<=2)return'uv-low';if(uv<=5)return'uv-moderate';if(uv<=7)return'uv-high';if(uv<=10)return'uv-vhigh';return'uv-extreme';}
-function getUvTag(uv){var idx=Math.min(Math.round(uv),11);return LANGS[currentLang].uvTags[idx]||LANGS[currentLang].uvTags[11];}
-function updateUvChip(uv){var chip=document.getElementById('uv-chip');['uv-low','uv-moderate','uv-high','uv-vhigh','uv-extreme'].forEach(function(c){chip.classList.remove(c);});chip.classList.add(getUvClass(uv));document.getElementById('w-uv').textContent=uv;document.getElementById('w-uv-tag').textContent=getUvTag(uv);}
+function getUvClass(uv){uv=+uv;if(uv<=2)return'uv-low';if(uv<=5)return'uv-moderate';if(uv<=7)return'uv-high';if(uv<=10)return'uv-vhigh';return'uv-extreme';}
+function getUvTag(uv){uv=+uv;var idx=Math.min(Math.round(uv),11);return LANGS[currentLang].uvTags[idx]||LANGS[currentLang].uvTags[11];}
+function updateUvChip(uv){uv=+uv;var chip=document.getElementById('uv-chip');['uv-low','uv-moderate','uv-high','uv-vhigh','uv-extreme'].forEach(function(c){chip.classList.remove(c);});chip.classList.add(getUvClass(uv));document.getElementById('w-uv').textContent=uv;document.getElementById('w-uv-tag').textContent=getUvTag(uv);}
 function getHiClass(hi){if(hi<27)return'uv-low';if(hi<32)return'uv-moderate';if(hi<41)return'uv-high';if(hi<54)return'uv-vhigh';return'uv-extreme';}
 function getHiTag(hi){var L=LANGS[currentLang].hiTags;if(hi<27)return L[0];if(hi<32)return L[1];if(hi<41)return L[2];if(hi<54)return L[3];return L[4];}
 function updateHiChip(hi){var chip=document.getElementById('hi-chip');['uv-low','uv-moderate','uv-high','uv-vhigh','uv-extreme'].forEach(function(c){chip.classList.remove(c);});chip.classList.add(getHiClass(hi));document.getElementById('w-hi').textContent=hi.toFixed(1)+' C';document.getElementById('w-hi-tag').textContent=getHiTag(hi);}
