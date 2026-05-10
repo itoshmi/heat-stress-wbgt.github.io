@@ -8,7 +8,7 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Georgia', serif; font-size: 13px; background: #f7f8fa; color: #1a1a1a; padding: 1rem 1.5rem 2.5rem; max-width: 1100px; margin: 0 auto; }
-  .lang-bar { display: flex; gap: 6px; justify-content: flex-end; margin-bottom: 0.75rem; }
+  .lang-bar { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; margin-bottom: 0.75rem; }
   .lang-btn { display: flex; align-items: center; gap: 5px; padding: 3px 9px; border: 1.5px solid #d0d7e2; border-radius: 20px; background: #fff; cursor: pointer; font-size: 11px; font-family: 'Georgia', serif; color: #444; transition: border-color 0.15s, background 0.15s, color 0.15s; }
   .lang-btn:hover { border-color: #1a3a5c; color: #1a3a5c; }
   .lang-btn.active { background: #1a3a5c; border-color: #1a3a5c; color: #fff; font-weight: 600; }
@@ -119,6 +119,8 @@
   <button class="lang-btn" onclick="setLang('es')"><span class="flag">&#127474;&#127485;</span> ES</button>
   <button class="lang-btn" onclick="setLang('pt')"><span class="flag">&#127463;&#127479;</span> PT</button>
   <button class="lang-btn" onclick="setLang('fr')"><span class="flag">&#127467;&#127479;</span> FR</button>
+  <button class="lang-btn" onclick="setLang('it')"><span class="flag">&#127470;&#127481;</span> IT</button>
+  <button class="lang-btn" onclick="setLang('nl')"><span class="flag">&#127475;&#127473;</span> NL</button>
 </div>
 <header>
   <p class="header-tagline" id="t-tagline"></p>
@@ -220,7 +222,7 @@ var PROXY = 'https://polished-limit-87cf.itoshmi.workers.dev';
 var LANGS = {
   en: {
     title: 'WBGT Heat Stress Calculator',
-    tagline: 'Be safe in the sun 🌞🔆',
+    tagline: 'Be safe under the sun 🌞🔆',
     desc: 'Live shade temperature adjusted for air pressure and humidity to give you the WBGT (Wet Bulb Globe Temperature) — a much better measure of heat stress than air temperature alone. Also tracks UV and airborne particulates.',
     searchLabel: 'City',
     cloudLabel: 'Sky Conditions',
@@ -240,7 +242,7 @@ var LANGS = {
   },
   es: {
     title: 'Calculadora de Estres Termico WBGT',
-    tagline: 'Cuidate del sol 🌞🔆',
+    tagline: 'Be safe under the sun 🌞🔆',
     desc: 'Temperatura a la sombra ajustada por presion del aire y humedad para obtener el WBGT (Wet Bulb Globe Temperature) -- una medida del estres termico mucho mas util que la temperatura del aire por si sola. Tambien incluye UV y particulas en el aire.',
     searchLabel: 'Ciudad',
     cloudLabel: 'Condiciones del Cielo',
@@ -260,7 +262,7 @@ var LANGS = {
   },
   pt: {
     title: 'Calculadora de Estresse Termico WBGT',
-    tagline: 'Cuide-se ao sol 🌞🔆',
+    tagline: 'Be safe under the sun 🌞🔆',
     desc: 'Temperatura a sombra ajustada pela pressao do ar e umidade para obter o WBGT (Wet Bulb Globe Temperature) -- uma medida de estresse termico muito mais util que a temperatura do ar sozinha. Tambem inclui UV e particulas no ar.',
     searchLabel: 'Cidade',
     cloudLabel: 'Condicoes do Ceu',
@@ -280,7 +282,7 @@ var LANGS = {
   },
   fr: {
     title: 'Calculateur de Stress Thermique WBGT',
-    tagline: 'Soyez prudent au soleil 🌞🔆',
+    tagline: 'Be safe under the sun 🌞🔆',
     desc: "Temperature a l'ombre ajustee pour la pression et l'humidite, pour obtenir le WBGT (Wet Bulb Globe Temperature) -- une mesure du stress thermique bien plus utile que la temperature de l'air seule. Inclut aussi les UV et les particules dans l'air.",
     searchLabel: 'Ville',
     cloudLabel: 'Conditions du Ciel',
@@ -297,6 +299,46 @@ var LANGS = {
     explain:"Ce microsite affiche la temperature exterieure actuelle a l'ombre, ajustee selon la pression atmospherique et la saturation en vapeur d'eau pour calculer le WBGT (Wet Bulb Globe Temperature), bien plus utile pour mesurer le stress thermique que la temperature de l'air seule. Il inclut aussi d'autres indicateurs comme le rayonnement UV et la quantite de micro et nanoparticules polluantes dans l'air.",
     formula:"Formule (Epstein) : WBGT = 0.567*T + 0.393*Pv + 3.94*(1 - nuages/100) | Pv = (HR/100)*6.105*e^(17.27*T/(237.7+T))*(P/1013.25)",
     credits:'Donnees : <a href="https://www.weatherapi.com" target="_blank" rel="noopener">WeatherAPI</a> · Qualite de l\'air : <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> · Table WBGT : Prof. Yoram Epstein, via <a href="https://arielschecklist.com/wbgt-chart/" target="_blank" rel="noopener">Ariel\'s Checklist</a>'
+  },
+  it: {
+    title: 'Calcolatore di Stress Termico WBGT',
+    tagline: 'Be safe under the sun 🌞🔆',
+    desc: "Temperatura all'ombra in tempo reale corretta per pressione atmosferica e umidita per ottenere il WBGT (Wet Bulb Globe Temperature) -- una misura dello stress termico molto piu utile della sola temperatura dell'aria. Include anche UV e particolato nell'aria.",
+    searchLabel: 'Citta',
+    cloudLabel: 'Condizioni del Cielo',
+    pressureLabel: 'Altitudine / Pressione (hPa)',
+    tempHeader: 'Temperatura (C)',
+    rhHeader: 'Umidita %',
+    cityPlaceholder: 'Digita una citta...',
+    wlTemp:'Temp', wlHum:'Umidita', wlPres:'Pressione', wlCloud:'Nuvole', wlHi:'Indice di Calore', wlUv:'UV', wlUpdated:'Aggiornato', wlAir:'Aria (µg/m³)',
+    refreshTitle:'Aggiorna', errLoad:'Impossibile caricare i dati. Tocca aggiorna per riprovare.',
+    uvTags:['Basso','Basso','Moderato','Moderato','Moderato','Moderato','Alto','Alto','Molto Alto','Molto Alto','Molto Alto','Estremo'],
+    hiTags:['Basso','Moderato','Alto','Molto Alto','Estremo'],
+    legend:['<25 Normale','25-27.9 Cautela','28-29.4 Cautela Estrema','29.5-31.9 Pericolo','>=32 Pericolo Estremo'],
+    risks:['Normale','Cautela','Cautela Estrema','Pericolo','Pericolo Estremo'],
+    explain:"Questo microsito mostra la temperatura esterna attuale all'ombra, corretta per la pressione atmosferica e la saturazione del vapore acqueo per calcolare il WBGT (Wet Bulb Globe Temperature), che e molto piu utile per misurare lo stress termico della sola temperatura dell'aria. Include anche altri indicatori di stress come la radiazione UV e la quantita di micro e nanoparticelle inquinanti nell'aria.",
+    formula:'Formula (Epstein): WBGT = 0.567*T + 0.393*Pv + 3.94*(1 - nuvole/100) | Pv = (UR/100)*6.105*e^(17.27*T/(237.7+T))*(P/1013.25)',
+    credits:'Dati: <a href="https://www.weatherapi.com" target="_blank" rel="noopener">WeatherAPI</a> · Qualita dell\'aria: <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> · Tabella WBGT: Prof. Yoram Epstein, via <a href="https://arielschecklist.com/wbgt-chart/" target="_blank" rel="noopener">Ariel\'s Checklist</a>'
+  },
+  nl: {
+    title: 'WBGT Hittestress Calculator',
+    tagline: 'Be safe under the sun 🌞🔆',
+    desc: 'Schaduwtemperatuur live aangepast voor luchtdruk en luchtvochtigheid om de WBGT (Wet Bulb Globe Temperature) te berekenen -- een veel betere maatstaf voor hittestress dan alleen de luchttemperatuur. Toont ook UV en deeltjes in de lucht.',
+    searchLabel: 'Stad',
+    cloudLabel: 'Bewolking',
+    pressureLabel: 'Hoogte / Druk (hPa)',
+    tempHeader: 'Temperatuur (C)',
+    rhHeader: 'Vochtigheid %',
+    cityPlaceholder: 'Typ een stad...',
+    wlTemp:'Temp', wlHum:'Vocht', wlPres:'Druk', wlCloud:'Bewolking', wlHi:'Hitte-index', wlUv:'UV', wlUpdated:'Bijgewerkt', wlAir:'Lucht (µg/m³)',
+    refreshTitle:'Vernieuwen', errLoad:'Kon weergegevens niet laden. Tik op vernieuwen om opnieuw te proberen.',
+    uvTags:['Laag','Laag','Matig','Matig','Matig','Matig','Hoog','Hoog','Zeer Hoog','Zeer Hoog','Zeer Hoog','Extreem'],
+    hiTags:['Laag','Matig','Hoog','Zeer Hoog','Extreem'],
+    legend:['<25 Normaal','25-27.9 Voorzichtig','28-29.4 Extra Voorzichtig','29.5-31.9 Gevaar','>=32 Extreem Gevaar'],
+    risks:['Normaal','Voorzichtig','Extra Voorzichtig','Gevaar','Extreem Gevaar'],
+    explain:'Deze microsite toont de huidige buitentemperatuur in de schaduw, aangepast voor luchtdruk en waterdampverzadiging om de WBGT (Wet Bulb Globe Temperature) te berekenen, die veel nuttiger is voor het meten van hittestress dan alleen de luchttemperatuur. Het bevat ook andere stressindicatoren zoals UV-straling en de hoeveelheid micro- en nanodeeltjes-vervuiling in de lucht.',
+    formula:'Formule (Epstein): WBGT = 0.567*T + 0.393*Pv + 3.94*(1 - bewolking/100) | Pv = (RV/100)*6.105*e^(17.27*T/(237.7+T))*(P/1013.25)',
+    credits:'Data: <a href="https://www.weatherapi.com" target="_blank" rel="noopener">WeatherAPI</a> · Luchtkwaliteit: <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> · WBGT-tabel: Prof. Yoram Epstein, via <a href="https://arielschecklist.com/wbgt-chart/" target="_blank" rel="noopener">Ariel\'s Checklist</a>'
   }
 };
 var TEMPS=[20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50];
