@@ -86,6 +86,15 @@
   .bottom-info p { font-size: 11px; color: #555; line-height: 1.75; margin-bottom: 0.3rem; }
   .bottom-info p:last-child { margin-bottom: 0; }
   .bottom-info .formula-line { font-style: italic; color: #999; font-size: 10.5px; }
+  .refresh-btn { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; padding: 0; border: 1.5px solid #ff6b00; background: #fff; color: #ff6b00; border-radius: 50%; cursor: pointer; flex-shrink: 0; transition: background 0.15s, color 0.15s, transform 0.1s; }
+  .refresh-btn[hidden] { display: none; }
+  .refresh-btn:hover { background: #ff6b00; color: #fff; }
+  .refresh-btn:active { transform: scale(0.92); }
+  .refresh-btn svg { display: block; }
+  .refresh-btn.spinning svg { animation: spin-icon 0.7s linear infinite; transform-origin: center; }
+  @keyframes spin-icon { to { transform: rotate(360deg); } }
+  .error-msg { display: none; color: #c62828; font-size: 11.5px; padding: 7px 11px; background: #ffebee; border: 1px solid #ef9a9a; border-radius: 4px; margin-top: 0.65rem; }
+  .error-msg.visible { display: block; }
 </style>
 </head>
 <body>
@@ -107,6 +116,13 @@
       <div class="search-spinner" id="spinner"></div>
       <div class="suggestions" id="suggestions"></div>
     </div>
+    <button class="refresh-btn" id="refreshBtn" hidden type="button" title="Refresh" aria-label="Refresh">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="23 4 23 10 17 10"/>
+        <polyline points="1 20 1 14 7 14"/>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+      </svg>
+    </button>
   </div>
   <div class="data-row" id="dataRow">
     <div class="weather-left">
@@ -116,6 +132,7 @@
         <div class="w-card"><span class="w-label" id="wl-hum"></span><span class="w-value" id="w-hum">--</span></div>
         <div class="w-card"><span class="w-label" id="wl-pres"></span><span class="w-value" id="w-pres">--</span></div>
         <div class="w-card"><span class="w-label" id="wl-cloud"></span><span class="w-value" id="w-cloud">--</span></div>
+        <div class="w-card"><span class="w-label" id="wl-updated"></span><span class="w-value" id="w-updated">--</span></div>
         <div class="w-card-hi" id="hi-chip">
           <span class="w-label" id="wl-hi"></span>
           <span class="w-value" id="w-hi">--</span>
@@ -139,6 +156,7 @@
       <span class="readout-risk" id="readout-risk"></span>
     </div>
   </div>
+  <div class="error-msg" id="errMsg"></div>
 </div>
 <div class="controls">
   <div class="ctrl-group">
@@ -184,7 +202,8 @@ var LANGS = {
     tempHeader: 'Temperature (C)',
     rhHeader: 'Humidity %',
     cityPlaceholder: 'Type a city...',
-    wlTemp:'Temp', wlHum:'Humidity', wlPres:'Pressure', wlCloud:'Cloud', wlHi:'Heat Index', wlUv:'UV',
+    wlTemp:'Temp', wlHum:'Humidity', wlPres:'Pressure', wlCloud:'Cloud', wlHi:'Heat Index', wlUv:'UV', wlUpdated:'Updated',
+    refreshTitle:'Refresh', errLoad:'Could not load weather data. Tap refresh to retry.',
     uvTags:['Low','Low','Moderate','Moderate','Moderate','Moderate','High','High','Very High','Very High','Very High','Extreme'],
     hiTags:['Low','Moderate','High','Very High','Extreme'],
     legend:['<25 Normal','25-27.9 Caution','28-29.4 Extreme Caution','29.5-31.9 Danger','>=32 Extreme Danger'],
@@ -201,7 +220,8 @@ var LANGS = {
     tempHeader: 'Temperatura (C)',
     rhHeader: 'Humedad %',
     cityPlaceholder: 'Escribe una ciudad...',
-    wlTemp:'Temp', wlHum:'Humedad', wlPres:'Presion', wlCloud:'Nubosidad', wlHi:'Indice de Calor', wlUv:'UV',
+    wlTemp:'Temp', wlHum:'Humedad', wlPres:'Presion', wlCloud:'Nubosidad', wlHi:'Indice de Calor', wlUv:'UV', wlUpdated:'Actualizado',
+    refreshTitle:'Actualizar', errLoad:'No se pudieron cargar los datos. Toca actualizar para reintentar.',
     uvTags:['Bajo','Bajo','Moderado','Moderado','Moderado','Moderado','Alto','Alto','Muy Alto','Muy Alto','Muy Alto','Extremo'],
     hiTags:['Bajo','Moderado','Alto','Muy Alto','Extremo'],
     legend:['<25 Normal','25-27.9 Precaucion','28-29.4 Precaucion Extrema','29.5-31.9 Peligro','>=32 Peligro Extremo'],
@@ -218,7 +238,8 @@ var LANGS = {
     tempHeader: 'Temperatura (C)',
     rhHeader: 'Umidade %',
     cityPlaceholder: 'Digite uma cidade...',
-    wlTemp:'Temp', wlHum:'Umidade', wlPres:'Pressao', wlCloud:'Nuvens', wlHi:'Indice de Calor', wlUv:'UV',
+    wlTemp:'Temp', wlHum:'Umidade', wlPres:'Pressao', wlCloud:'Nuvens', wlHi:'Indice de Calor', wlUv:'UV', wlUpdated:'Atualizado',
+    refreshTitle:'Atualizar', errLoad:'Nao foi possivel carregar os dados. Toque em atualizar para tentar novamente.',
     uvTags:['Baixo','Baixo','Moderado','Moderado','Moderado','Moderado','Alto','Alto','Muito Alto','Muito Alto','Muito Alto','Extremo'],
     hiTags:['Baixo','Moderado','Alto','Muito Alto','Extremo'],
     legend:['<25 Normal','25-27.9 Atencao','28-29.4 Atencao Extrema','29.5-31.9 Perigo','>=32 Perigo Extremo'],
@@ -235,7 +256,8 @@ var LANGS = {
     tempHeader: 'Temperature (C)',
     rhHeader: 'Humidite %',
     cityPlaceholder: 'Tapez une ville...',
-    wlTemp:'Temp', wlHum:'Humidite', wlPres:'Pression', wlCloud:'Nuages', wlHi:'Indice de Chaleur', wlUv:'UV',
+    wlTemp:'Temp', wlHum:'Humidite', wlPres:'Pression', wlCloud:'Nuages', wlHi:'Indice de Chaleur', wlUv:'UV', wlUpdated:'Maj',
+    refreshTitle:'Actualiser', errLoad:'Impossible de charger les donnees. Appuyez sur actualiser pour reessayer.',
     uvTags:['Faible','Faible','Modere','Modere','Modere','Modere','Eleve','Eleve','Tres Eleve','Tres Eleve','Tres Eleve','Extreme'],
     hiTags:['Faible','Modere','Eleve','Tres Eleve','Extreme'],
     legend:['<25 Normal','25-27.9 Prudence','28-29.4 Prudence Extreme','29.5-31.9 Danger','>=32 Danger Extreme'],
@@ -246,7 +268,7 @@ var LANGS = {
 };
 var TEMPS=[20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50];
 var RHS=[0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100];
-var currentLang='en', liveTemp=null, liveRH=null, liveUV=null, liveHI=null, pulseInterval=null, pulseOn=true;
+var currentLang='en', liveTemp=null, liveRH=null, liveUV=null, liveHI=null, pulseInterval=null, pulseOn=true, lastQuery=null;
 function getUvClass(uv){uv=+uv;if(uv<=2)return'uv-low';if(uv<=5)return'uv-moderate';if(uv<=7)return'uv-high';if(uv<=10)return'uv-vhigh';return'uv-extreme';}
 function getUvTag(uv){uv=+uv;var idx=Math.min(Math.round(uv),11);return LANGS[currentLang].uvTags[idx]||LANGS[currentLang].uvTags[11];}
 function updateUvChip(uv){uv=+uv;var chip=document.getElementById('uv-chip');['uv-low','uv-moderate','uv-high','uv-vhigh','uv-extreme'].forEach(function(c){chip.classList.remove(c);});chip.classList.add(getUvClass(uv));document.getElementById('w-uv').textContent=uv;document.getElementById('w-uv-tag').textContent=getUvTag(uv);}
@@ -261,7 +283,7 @@ var readoutClasses=['readout-normal','readout-caution','readout-xcaution','reado
 function updateReadout(wbgt){var ri=getRiskIndex(wbgt);var box=document.getElementById('wbgtReadout');readoutClasses.forEach(function(c){box.classList.remove(c);});box.classList.add(readoutClasses[ri]);document.getElementById('readout-value').innerHTML=wbgt.toFixed(1)+'<span class="readout-unit">C</span>';document.getElementById('readout-risk').textContent=LANGS[currentLang].risks[ri];}
 function startPulse(){if(pulseInterval)clearInterval(pulseInterval);pulseOn=true;pulseInterval=setInterval(function(){var cell=document.querySelector('td.live-cell');if(!cell){clearInterval(pulseInterval);pulseInterval=null;return;}pulseOn=!pulseOn;cell.classList.toggle('pulse-off',!pulseOn);},500);}
 function buildTable(){var cloud=+document.getElementById('cloud').value;var pressure=+document.getElementById('pressure').value;var L=LANGS[currentLang];var snapT=(liveTemp!==null)?snapCeil(liveTemp,TEMPS):null;var snapRH=(liveRH!==null)?snapCeil(liveRH,RHS):null;if(snapT!==null&&snapRH!==null){updateReadout(calcWBGT(snapT,snapRH,cloud,pressure));}var html='<thead><tr>';html+='<th rowspan="2" style="background:#1a3a5c;min-width:28px;max-width:28px;padding:0;vertical-align:middle;"><div style="writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;font-size:9.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#a8c4e0;padding:10px 6px;">'+L.rhHeader+'</div></th>';html+='<th colspan="'+TEMPS.length+'" style="background:#1a3a5c;color:#a8c4e0;text-align:center;padding:5px 8px;font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.1);">-- '+L.tempHeader+' --</th>';html+='</tr><tr>';TEMPS.forEach(function(t){html+='<th style="background:#243f5e;color:#e8f0f8;padding:4px 5px;font-size:10.5px;font-weight:700;min-width:36px;">'+t+'</th>';});html+='</tr></thead><tbody>';RHS.forEach(function(rh){html+='<tr><td class="rh-label">'+rh+'</td>';TEMPS.forEach(function(t){var w=calcWBGT(t,rh,cloud,pressure);var c=getColor(w);var isLive=(snapT!==null&&snapRH!==null&&t===snapT&&rh===snapRH);var cls=isLive?' class="live-cell"':'';html+='<td'+cls+' style="background:'+c.bg+';color:'+c.text+';font-weight:500">'+w.toFixed(1)+'</td>';});html+='</tr>';});html+='</tbody>';document.getElementById('wbgt-table').innerHTML=html;if(snapT!==null)startPulse();}
-function applyLang(code){var L=LANGS[code];document.documentElement.lang=code;document.getElementById('t-title').textContent=L.title;document.getElementById('t-desc').textContent=L.desc;document.getElementById('t-search-label').textContent=L.searchLabel;document.getElementById('t-cloud-label').textContent=L.cloudLabel;document.getElementById('t-pressure-label').textContent=L.pressureLabel;document.getElementById('cityInput').placeholder=L.cityPlaceholder;document.getElementById('wl-temp').textContent=L.wlTemp;document.getElementById('wl-hum').textContent=L.wlHum;document.getElementById('wl-pres').textContent=L.wlPres;document.getElementById('wl-cloud').textContent=L.wlCloud;document.getElementById('wl-hi').textContent=L.wlHi;document.getElementById('wl-uv').textContent=L.wlUv;document.getElementById('t-explain').textContent=L.explain;document.getElementById('t-formula').textContent=L.formula;L.legend.forEach(function(txt,i){document.getElementById('l'+i).textContent=txt;});if(liveUV!==null)updateUvChip(liveUV);if(liveHI!==null)updateHiChip(liveHI);var snapT=(liveTemp!==null)?snapCeil(liveTemp,TEMPS):null;var snapRH=(liveRH!==null)?snapCeil(liveRH,RHS):null;if(snapT!==null&&snapRH!==null){updateReadout(calcWBGT(snapT,snapRH,+document.getElementById('cloud').value,+document.getElementById('pressure').value));}buildTable();}
+function applyLang(code){var L=LANGS[code];document.documentElement.lang=code;document.getElementById('t-title').textContent=L.title;document.getElementById('t-desc').textContent=L.desc;document.getElementById('t-search-label').textContent=L.searchLabel;document.getElementById('t-cloud-label').textContent=L.cloudLabel;document.getElementById('t-pressure-label').textContent=L.pressureLabel;document.getElementById('cityInput').placeholder=L.cityPlaceholder;document.getElementById('wl-temp').textContent=L.wlTemp;document.getElementById('wl-hum').textContent=L.wlHum;document.getElementById('wl-pres').textContent=L.wlPres;document.getElementById('wl-cloud').textContent=L.wlCloud;document.getElementById('wl-hi').textContent=L.wlHi;document.getElementById('wl-uv').textContent=L.wlUv;document.getElementById('wl-updated').textContent=L.wlUpdated;var rb=document.getElementById('refreshBtn');rb.title=L.refreshTitle;rb.setAttribute('aria-label',L.refreshTitle);document.getElementById('errMsg').textContent=L.errLoad;document.getElementById('t-explain').textContent=L.explain;document.getElementById('t-formula').textContent=L.formula;L.legend.forEach(function(txt,i){document.getElementById('l'+i).textContent=txt;});if(liveUV!==null)updateUvChip(liveUV);if(liveHI!==null)updateHiChip(liveHI);var snapT=(liveTemp!==null)?snapCeil(liveTemp,TEMPS):null;var snapRH=(liveRH!==null)?snapCeil(liveRH,RHS):null;if(snapT!==null&&snapRH!==null){updateReadout(calcWBGT(snapT,snapRH,+document.getElementById('cloud').value,+document.getElementById('pressure').value));}buildTable();}
 function setLang(code){currentLang=code;document.querySelectorAll('.lang-btn').forEach(function(btn){btn.classList.toggle('active',btn.getAttribute('onclick')==="setLang('"+code+"')");});applyLang(code);}
 document.getElementById('cloud').addEventListener('input',function(){document.getElementById('cloud-val').textContent=this.value+'%';buildTable();});
 document.getElementById('pressure').addEventListener('input',function(){document.getElementById('pressure-val').textContent=this.value+' hPa';buildTable();});
@@ -271,10 +293,62 @@ var suggestions=document.getElementById('suggestions');
 var spinner=document.getElementById('spinner');
 cityInput.addEventListener('input',function(){clearTimeout(debounceTimer);debounceTimer=setTimeout(searchCities,320);});
 async function searchCities(){var q=cityInput.value.trim();suggestions.innerHTML='';if(q.length<2)return;spinner.style.display='block';try{var res=await fetch(PROXY+'?endpoint=search&q='+encodeURIComponent(q));var list=await res.json();list.forEach(function(city){var div=document.createElement('div');div.className='suggestion-item';div.textContent=city.name+', '+city.region+', '+city.country;div.onclick=function(){cityInput.value=city.name+', '+city.country;suggestions.innerHTML='';fetchWeather(city.name+','+city.lat+','+city.lon);};suggestions.appendChild(div);});}catch(e){console.error('Search error',e);}spinner.style.display='none';}
-async function fetchWeather(query){spinner.style.display='block';try{var res=await fetch(PROXY+'?endpoint=forecast&q='+encodeURIComponent(query)+'&days=1&aqi=no&alerts=no');var data=await res.json();var cur=data.current;var astro=data.forecast.forecastday[0].astro;liveTemp=cur.temp_c;liveRH=cur.humidity;var pressure=Math.max(600,Math.min(1080,Math.round(cur.pressure_mb)));var cloud=Math.max(0,Math.min(100,cur.cloud));document.getElementById('w-city').textContent=data.location.name+', '+data.location.country;document.getElementById('w-temp').textContent=cur.temp_c.toFixed(1)+' C';document.getElementById('w-hum').textContent=cur.humidity+'%';document.getElementById('w-pres').textContent=cur.pressure_mb+' hPa';document.getElementById('w-cloud').textContent=cur.cloud+'%';document.getElementById('w-sunrise').textContent=astro.sunrise;document.getElementById('w-sunset').textContent=astro.sunset;var rawUV = (cur.uv != null && cur.uv !== '') ? +cur.uv : (data.forecast.forecastday[0].day.uv != null ? +data.forecast.forecastday[0].day.uv : 0);
-    liveUV = rawUV; updateUvChip(liveUV);liveHI=cur.heatindex_c;updateHiChip(cur.heatindex_c);document.getElementById('dataRow').classList.add('visible');document.getElementById('cloud').value=cloud;document.getElementById('pressure').value=pressure;document.getElementById('cloud-val').textContent=cloud+'%';document.getElementById('pressure-val').textContent=pressure+' hPa';buildTable();}catch(e){console.error('Weather fetch error',e);}spinner.style.display='none';}
+async function fetchWeather(query){
+  lastQuery=query;
+  document.getElementById('refreshBtn').hidden=false;
+  document.getElementById('errMsg').classList.remove('visible');
+  spinner.style.display='block';
+  try{
+    var res=await fetch(PROXY+'?endpoint=forecast&q='+encodeURIComponent(query)+'&days=1&aqi=no&alerts=no');
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    var data=await res.json();
+    if(data.error)throw new Error(data.error.message||'API error');
+    var cur=data.current;
+    var astro=data.forecast.forecastday[0].astro;
+    liveTemp=cur.temp_c;liveRH=cur.humidity;
+    var pressure=Math.max(600,Math.min(1080,Math.round(cur.pressure_mb)));
+    var cloud=Math.max(0,Math.min(100,cur.cloud));
+    document.getElementById('w-city').textContent=data.location.name+', '+data.location.country;
+    document.getElementById('w-temp').textContent=cur.temp_c.toFixed(1)+' C';
+    document.getElementById('w-hum').textContent=cur.humidity+'%';
+    document.getElementById('w-pres').textContent=cur.pressure_mb+' hPa';
+    document.getElementById('w-cloud').textContent=cur.cloud+'%';
+    document.getElementById('w-sunrise').textContent=astro.sunrise;
+    document.getElementById('w-sunset').textContent=astro.sunset;
+    var lu=cur.last_updated||'';
+    document.getElementById('w-updated').textContent=(lu.indexOf(' ')>-1?lu.split(' ')[1]:lu)||'--';
+    var hourly=null;
+    try{var hr=+data.location.localtime.split(' ')[1].split(':')[0];hourly=data.forecast.forecastday[0].hour[hr];}catch(e){}
+    var rawUV=(hourly&&hourly.uv!=null)?+hourly.uv:((cur.uv!=null&&cur.uv!=='')?+cur.uv:(data.forecast.forecastday[0].day.uv!=null?+data.forecast.forecastday[0].day.uv:0));
+    liveUV=rawUV;updateUvChip(liveUV);
+    liveHI=cur.heatindex_c;updateHiChip(cur.heatindex_c);
+    document.getElementById('dataRow').classList.add('visible');
+    document.getElementById('cloud').value=cloud;
+    document.getElementById('pressure').value=pressure;
+    document.getElementById('cloud-val').textContent=cloud+'%';
+    document.getElementById('pressure-val').textContent=pressure+' hPa';
+    buildTable();
+    try{localStorage.setItem('wbgt-last-city',JSON.stringify({q:query,display:cityInput.value}));}catch(e){}
+  }catch(e){
+    console.error('Weather fetch error',e);
+    document.getElementById('errMsg').classList.add('visible');
+  }
+  spinner.style.display='none';
+}
 document.addEventListener('click',function(e){if(!e.target.closest('.search-wrap'))suggestions.innerHTML='';});
+document.getElementById('refreshBtn').addEventListener('click',function(){
+  if(!lastQuery||this.classList.contains('spinning'))return;
+  var btn=this;btn.classList.add('spinning');
+  fetchWeather(lastQuery).finally(function(){btn.classList.remove('spinning');});
+});
 applyLang('en');
+try{
+  var saved=localStorage.getItem('wbgt-last-city');
+  if(saved){
+    var s=JSON.parse(saved);
+    if(s&&s.q&&s.display){cityInput.value=s.display;fetchWeather(s.q);}
+  }
+}catch(e){}
 </script>
 </body>
 </html>
