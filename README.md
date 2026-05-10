@@ -6,6 +6,8 @@ A lightweight, single-file web calculator that estimates **Wet Bulb Globe Temper
 
 👉 [itoshmi.github.io/heat-stress-wbgt](https://itoshmi.github.io/heat-stress-wbgt.github.io/)
 
+👉 [heatstress.org](https://heatstress.org/)
+
 ## What it does
 
 Calculates WBGT from:
