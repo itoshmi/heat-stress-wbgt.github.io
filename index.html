@@ -222,7 +222,7 @@ var PROXY = 'https://polished-limit-87cf.itoshmi.workers.dev';
 var LANGS = {
   en: {
     title: 'WBGT Heat Stress Calculator',
-    tagline: 'Be safe under the sun 🌞🔆',
+    tagline: 'Be safe under the sun <span style="font-style:normal">🌞🔆</span>',
     desc: 'Live shade temperature adjusted for air pressure and humidity to give you the WBGT (Wet Bulb Globe Temperature) — a much better measure of heat stress than air temperature alone. Also tracks UV and airborne particulates.',
     searchLabel: 'City',
     cloudLabel: 'Sky Conditions',
@@ -234,15 +234,15 @@ var LANGS = {
     refreshTitle:'Refresh', errLoad:'Could not load weather data. Tap refresh to retry.',
     uvTags:['Low','Low','Moderate','Moderate','Moderate','Moderate','High','High','Very High','Very High','Very High','Extreme'],
     hiTags:['Low','Moderate','High','Very High','Extreme'],
-    legend:['<25 Normal','25-27.9 Caution','28-29.4 Extreme Caution','29.5-31.9 Danger','>=32 Extreme Danger'],
-    risks:['Normal','Caution','Extreme Caution','Danger','Extreme Danger'],
+    legend:['<25 Relax','25-27.9 Be Careful','28-29.4 Limit Exposure','29.5-31.9 Extreme Heat','>=32 Extreme Danger'],
+    risks:['Relax','Be Careful','Limit Exposure','Extreme Heat','Extreme Danger'],
     explain:'This microsite displays the current outdoor temperature in the shade, adjusted for air pressure and water vapor saturation to calculate the WBGT (Wet Bulb Globe Temperature), which is much more useful for measuring heat stress than air temperature alone. It also includes other stress indicators such as UV radiation and the amount of micro- and nanoparticle pollutants in the air.',
     formula:'Formula (Epstein): WBGT = 0.567*T + 0.393*Pv + 3.94*(1 - cloud/100) | Pv = (RH/100)*6.105*e^(17.27*T/(237.7+T))*(P/1013.25)',
     credits:'Data: <a href="https://www.weatherapi.com" target="_blank" rel="noopener">WeatherAPI</a> · Air quality: <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> · WBGT chart: Prof. Yoram Epstein, via <a href="https://arielschecklist.com/wbgt-chart/" target="_blank" rel="noopener">Ariel\'s Checklist</a>'
   },
   es: {
     title: 'Calculadora de Estres Termico WBGT',
-    tagline: 'Be safe under the sun 🌞🔆',
+    tagline: 'Be safe under the sun <span style="font-style:normal">🌞🔆</span>',
     desc: 'Temperatura a la sombra ajustada por presion del aire y humedad para obtener el WBGT (Wet Bulb Globe Temperature) -- una medida del estres termico mucho mas util que la temperatura del aire por si sola. Tambien incluye UV y particulas en el aire.',
     searchLabel: 'Ciudad',
     cloudLabel: 'Condiciones del Cielo',
@@ -254,15 +254,15 @@ var LANGS = {
     refreshTitle:'Actualizar', errLoad:'No se pudieron cargar los datos. Toca actualizar para reintentar.',
     uvTags:['Bajo','Bajo','Moderado','Moderado','Moderado','Moderado','Alto','Alto','Muy Alto','Muy Alto','Muy Alto','Extremo'],
     hiTags:['Bajo','Moderado','Alto','Muy Alto','Extremo'],
-    legend:['<25 Normal','25-27.9 Precaucion','28-29.4 Precaucion Extrema','29.5-31.9 Peligro','>=32 Peligro Extremo'],
-    risks:['Normal','Precaucion','Precaucion Extrema','Peligro','Peligro Extremo'],
+    legend:['<25 Relajate','25-27.9 Ten Cuidado','28-29.4 Limita Exposicion','29.5-31.9 Calor Extremo','>=32 Peligro Extremo'],
+    risks:['Relajate','Ten Cuidado','Limita Exposicion','Calor Extremo','Peligro Extremo'],
     explain:'Este micrositio muestra la temperatura actual al aire libre a la sombra, ajustada por la presion del aire y la saturacion de vapor de agua para calcular el WBGT (Wet Bulb Globe Temperature), que es mucho mas util para medir el estres termico que la temperatura del aire por si sola. Tambien incluye otros indicadores como la radiacion UV y la cantidad de micro y nanoparticulas contaminantes en el aire.',
     formula:'Formula (Epstein): WBGT = 0.567*T + 0.393*Pv + 3.94*(1 - nubosidad/100) | Pv = (HR/100)*6.105*e^(17.27*T/(237.7+T))*(P/1013.25)',
     credits:'Datos: <a href="https://www.weatherapi.com" target="_blank" rel="noopener">WeatherAPI</a> · Calidad del aire: <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> · Tabla WBGT: Prof. Yoram Epstein, via <a href="https://arielschecklist.com/wbgt-chart/" target="_blank" rel="noopener">Ariel\'s Checklist</a>'
   },
   pt: {
     title: 'Calculadora de Estresse Termico WBGT',
-    tagline: 'Be safe under the sun 🌞🔆',
+    tagline: 'Be safe under the sun <span style="font-style:normal">🌞🔆</span>',
     desc: 'Temperatura a sombra ajustada pela pressao do ar e umidade para obter o WBGT (Wet Bulb Globe Temperature) -- uma medida de estresse termico muito mais util que a temperatura do ar sozinha. Tambem inclui UV e particulas no ar.',
     searchLabel: 'Cidade',
     cloudLabel: 'Condicoes do Ceu',
@@ -274,15 +274,15 @@ var LANGS = {
     refreshTitle:'Atualizar', errLoad:'Nao foi possivel carregar os dados. Toque em atualizar para tentar novamente.',
     uvTags:['Baixo','Baixo','Moderado','Moderado','Moderado','Moderado','Alto','Alto','Muito Alto','Muito Alto','Muito Alto','Extremo'],
     hiTags:['Baixo','Moderado','Alto','Muito Alto','Extremo'],
-    legend:['<25 Normal','25-27.9 Atencao','28-29.4 Atencao Extrema','29.5-31.9 Perigo','>=32 Perigo Extremo'],
-    risks:['Normal','Atencao','Atencao Extrema','Perigo','Perigo Extremo'],
+    legend:['<25 Relaxe','25-27.9 Tenha Cuidado','28-29.4 Limite Exposicao','29.5-31.9 Calor Extremo','>=32 Perigo Extremo'],
+    risks:['Relaxe','Tenha Cuidado','Limite Exposicao','Calor Extremo','Perigo Extremo'],
     explain:'Este microsite exibe a temperatura externa atual a sombra, ajustada pela pressao do ar e saturacao de vapor de agua para calcular o WBGT (Wet Bulb Globe Temperature), que e muito mais util para medir o estresse termico do que a temperatura do ar sozinha. Tambem inclui outros indicadores como radiacao UV e a quantidade de micro e nanoparticulas poluentes no ar.',
     formula:'Formula (Epstein): WBGT = 0.567*T + 0.393*Pv + 3.94*(1 - nuvens/100) | Pv = (UR/100)*6.105*e^(17.27*T/(237.7+T))*(P/1013.25)',
     credits:'Dados: <a href="https://www.weatherapi.com" target="_blank" rel="noopener">WeatherAPI</a> · Qualidade do ar: <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> · Tabela WBGT: Prof. Yoram Epstein, via <a href="https://arielschecklist.com/wbgt-chart/" target="_blank" rel="noopener">Ariel\'s Checklist</a>'
   },
   fr: {
     title: 'Calculateur de Stress Thermique WBGT',
-    tagline: 'Be safe under the sun 🌞🔆',
+    tagline: 'Be safe under the sun <span style="font-style:normal">🌞🔆</span>',
     desc: "Temperature a l'ombre ajustee pour la pression et l'humidite, pour obtenir le WBGT (Wet Bulb Globe Temperature) -- une mesure du stress thermique bien plus utile que la temperature de l'air seule. Inclut aussi les UV et les particules dans l'air.",
     searchLabel: 'Ville',
     cloudLabel: 'Conditions du Ciel',
@@ -294,15 +294,15 @@ var LANGS = {
     refreshTitle:'Actualiser', errLoad:'Impossible de charger les donnees. Appuyez sur actualiser pour reessayer.',
     uvTags:['Faible','Faible','Modere','Modere','Modere','Modere','Eleve','Eleve','Tres Eleve','Tres Eleve','Tres Eleve','Extreme'],
     hiTags:['Faible','Modere','Eleve','Tres Eleve','Extreme'],
-    legend:['<25 Normal','25-27.9 Prudence','28-29.4 Prudence Extreme','29.5-31.9 Danger','>=32 Danger Extreme'],
-    risks:['Normal','Prudence','Prudence Extreme','Danger','Danger Extreme'],
+    legend:['<25 Relax','25-27.9 Soyez Prudent','28-29.4 Limitez Exposition','29.5-31.9 Chaleur Extreme','>=32 Danger Extreme'],
+    risks:['Relax','Soyez Prudent','Limitez Exposition','Chaleur Extreme','Danger Extreme'],
     explain:"Ce microsite affiche la temperature exterieure actuelle a l'ombre, ajustee selon la pression atmospherique et la saturation en vapeur d'eau pour calculer le WBGT (Wet Bulb Globe Temperature), bien plus utile pour mesurer le stress thermique que la temperature de l'air seule. Il inclut aussi d'autres indicateurs comme le rayonnement UV et la quantite de micro et nanoparticules polluantes dans l'air.",
     formula:"Formule (Epstein) : WBGT = 0.567*T + 0.393*Pv + 3.94*(1 - nuages/100) | Pv = (HR/100)*6.105*e^(17.27*T/(237.7+T))*(P/1013.25)",
     credits:'Donnees : <a href="https://www.weatherapi.com" target="_blank" rel="noopener">WeatherAPI</a> · Qualite de l\'air : <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> · Table WBGT : Prof. Yoram Epstein, via <a href="https://arielschecklist.com/wbgt-chart/" target="_blank" rel="noopener">Ariel\'s Checklist</a>'
   },
   it: {
     title: 'Calcolatore di Stress Termico WBGT',
-    tagline: 'Be safe under the sun 🌞🔆',
+    tagline: 'Be safe under the sun <span style="font-style:normal">🌞🔆</span>',
     desc: "Temperatura all'ombra in tempo reale corretta per pressione atmosferica e umidita per ottenere il WBGT (Wet Bulb Globe Temperature) -- una misura dello stress termico molto piu utile della sola temperatura dell'aria. Include anche UV e particolato nell'aria.",
     searchLabel: 'Citta',
     cloudLabel: 'Condizioni del Cielo',
@@ -314,15 +314,15 @@ var LANGS = {
     refreshTitle:'Aggiorna', errLoad:'Impossibile caricare i dati. Tocca aggiorna per riprovare.',
     uvTags:['Basso','Basso','Moderato','Moderato','Moderato','Moderato','Alto','Alto','Molto Alto','Molto Alto','Molto Alto','Estremo'],
     hiTags:['Basso','Moderato','Alto','Molto Alto','Estremo'],
-    legend:['<25 Normale','25-27.9 Cautela','28-29.4 Cautela Estrema','29.5-31.9 Pericolo','>=32 Pericolo Estremo'],
-    risks:['Normale','Cautela','Cautela Estrema','Pericolo','Pericolo Estremo'],
+    legend:['<25 Rilassati','25-27.9 Stai Attento','28-29.4 Limita Esposizione','29.5-31.9 Caldo Estremo','>=32 Pericolo Estremo'],
+    risks:['Rilassati','Stai Attento','Limita Esposizione','Caldo Estremo','Pericolo Estremo'],
     explain:"Questo microsito mostra la temperatura esterna attuale all'ombra, corretta per la pressione atmosferica e la saturazione del vapore acqueo per calcolare il WBGT (Wet Bulb Globe Temperature), che e molto piu utile per misurare lo stress termico della sola temperatura dell'aria. Include anche altri indicatori di stress come la radiazione UV e la quantita di micro e nanoparticelle inquinanti nell'aria.",
     formula:'Formula (Epstein): WBGT = 0.567*T + 0.393*Pv + 3.94*(1 - nuvole/100) | Pv = (UR/100)*6.105*e^(17.27*T/(237.7+T))*(P/1013.25)',
     credits:'Dati: <a href="https://www.weatherapi.com" target="_blank" rel="noopener">WeatherAPI</a> · Qualita dell\'aria: <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> · Tabella WBGT: Prof. Yoram Epstein, via <a href="https://arielschecklist.com/wbgt-chart/" target="_blank" rel="noopener">Ariel\'s Checklist</a>'
   },
   nl: {
     title: 'WBGT Hittestress Calculator',
-    tagline: 'Be safe under the sun 🌞🔆',
+    tagline: 'Be safe under the sun <span style="font-style:normal">🌞🔆</span>',
     desc: 'Schaduwtemperatuur live aangepast voor luchtdruk en luchtvochtigheid om de WBGT (Wet Bulb Globe Temperature) te berekenen -- een veel betere maatstaf voor hittestress dan alleen de luchttemperatuur. Toont ook UV en deeltjes in de lucht.',
     searchLabel: 'Stad',
     cloudLabel: 'Bewolking',
@@ -334,8 +334,8 @@ var LANGS = {
     refreshTitle:'Vernieuwen', errLoad:'Kon weergegevens niet laden. Tik op vernieuwen om opnieuw te proberen.',
     uvTags:['Laag','Laag','Matig','Matig','Matig','Matig','Hoog','Hoog','Zeer Hoog','Zeer Hoog','Zeer Hoog','Extreem'],
     hiTags:['Laag','Matig','Hoog','Zeer Hoog','Extreem'],
-    legend:['<25 Normaal','25-27.9 Voorzichtig','28-29.4 Extra Voorzichtig','29.5-31.9 Gevaar','>=32 Extreem Gevaar'],
-    risks:['Normaal','Voorzichtig','Extra Voorzichtig','Gevaar','Extreem Gevaar'],
+    legend:['<25 Ontspan','25-27.9 Wees Voorzichtig','28-29.4 Beperk Blootstelling','29.5-31.9 Extreme Hitte','>=32 Extreem Gevaar'],
+    risks:['Ontspan','Wees Voorzichtig','Beperk Blootstelling','Extreme Hitte','Extreem Gevaar'],
     explain:'Deze microsite toont de huidige buitentemperatuur in de schaduw, aangepast voor luchtdruk en waterdampverzadiging om de WBGT (Wet Bulb Globe Temperature) te berekenen, die veel nuttiger is voor het meten van hittestress dan alleen de luchttemperatuur. Het bevat ook andere stressindicatoren zoals UV-straling en de hoeveelheid micro- en nanodeeltjes-vervuiling in de lucht.',
     formula:'Formule (Epstein): WBGT = 0.567*T + 0.393*Pv + 3.94*(1 - bewolking/100) | Pv = (RV/100)*6.105*e^(17.27*T/(237.7+T))*(P/1013.25)',
     credits:'Data: <a href="https://www.weatherapi.com" target="_blank" rel="noopener">WeatherAPI</a> · Luchtkwaliteit: <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> · WBGT-tabel: Prof. Yoram Epstein, via <a href="https://arielschecklist.com/wbgt-chart/" target="_blank" rel="noopener">Ariel\'s Checklist</a>'
@@ -379,7 +379,7 @@ var readoutClasses=['readout-normal','readout-caution','readout-xcaution','reado
 function updateReadout(wbgt){var ri=getRiskIndex(wbgt);var box=document.getElementById('wbgtReadout');readoutClasses.forEach(function(c){box.classList.remove(c);});box.classList.add(readoutClasses[ri]);document.getElementById('readout-value').innerHTML=wbgt.toFixed(1)+'<span class="readout-unit">C</span>';document.getElementById('readout-risk').textContent=LANGS[currentLang].risks[ri];}
 function startPulse(){if(pulseInterval)clearInterval(pulseInterval);pulseOn=true;pulseInterval=setInterval(function(){var cell=document.querySelector('td.live-cell');if(!cell){clearInterval(pulseInterval);pulseInterval=null;return;}pulseOn=!pulseOn;cell.classList.toggle('pulse-off',!pulseOn);},500);}
 function buildTable(){var cloud=+document.getElementById('cloud').value;var pressure=+document.getElementById('pressure').value;var L=LANGS[currentLang];var snapT=(liveTemp!==null)?snapCeil(liveTemp,TEMPS):null;var snapRH=(liveRH!==null)?snapCeil(liveRH,RHS):null;if(snapT!==null&&snapRH!==null){updateReadout(calcWBGT(snapT,snapRH,cloud,pressure));}var html='<thead><tr>';html+='<th rowspan="2" style="background:#1a3a5c;min-width:28px;max-width:28px;padding:0;vertical-align:middle;"><div style="writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;font-size:9.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#a8c4e0;padding:10px 6px;">'+L.rhHeader+'</div></th>';html+='<th colspan="'+TEMPS.length+'" style="background:#1a3a5c;color:#a8c4e0;text-align:center;padding:5px 8px;font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.1);">-- '+L.tempHeader+' --</th>';html+='</tr><tr>';TEMPS.forEach(function(t){html+='<th style="background:#243f5e;color:#e8f0f8;padding:4px 5px;font-size:10.5px;font-weight:700;min-width:36px;">'+t+'</th>';});html+='</tr></thead><tbody>';RHS.forEach(function(rh){html+='<tr><td class="rh-label">'+rh+'</td>';TEMPS.forEach(function(t){var w=calcWBGT(t,rh,cloud,pressure);var c=getColor(w);var isLive=(snapT!==null&&snapRH!==null&&t===snapT&&rh===snapRH);var cls=isLive?' class="live-cell"':'';html+='<td'+cls+' style="background:'+c.bg+';color:'+c.text+';font-weight:500">'+w.toFixed(1)+'</td>';});html+='</tr>';});html+='</tbody>';document.getElementById('wbgt-table').innerHTML=html;if(snapT!==null)startPulse();}
-function applyLang(code){var L=LANGS[code];document.documentElement.lang=code;document.getElementById('t-tagline').textContent=L.tagline;document.getElementById('t-title').textContent=L.title;document.getElementById('t-desc').textContent=L.desc;document.getElementById('t-search-label').textContent=L.searchLabel;document.getElementById('t-cloud-label').textContent=L.cloudLabel;document.getElementById('t-pressure-label').textContent=L.pressureLabel;document.getElementById('cityInput').placeholder=L.cityPlaceholder;document.getElementById('wl-temp').textContent=L.wlTemp;document.getElementById('wl-hum').textContent=L.wlHum;document.getElementById('wl-pres').textContent=L.wlPres;document.getElementById('wl-cloud').textContent=L.wlCloud;document.getElementById('wl-hi').textContent=L.wlHi;document.getElementById('wl-uv').textContent=L.wlUv;document.getElementById('wl-air').textContent=L.wlAir;document.getElementById('wl-updated').textContent=L.wlUpdated;var rb=document.getElementById('refreshBtn');rb.title=L.refreshTitle;rb.setAttribute('aria-label',L.refreshTitle);document.getElementById('errMsg').textContent=L.errLoad;document.getElementById('t-explain').textContent=L.explain;document.getElementById('t-formula').textContent=L.formula;document.getElementById('t-credits').innerHTML=L.credits;L.legend.forEach(function(txt,i){document.getElementById('l'+i).textContent=txt;});if(liveUV!==null)updateUvChip(liveUV);if(liveHI!==null)updateHiChip(liveHI);var snapT=(liveTemp!==null)?snapCeil(liveTemp,TEMPS):null;var snapRH=(liveRH!==null)?snapCeil(liveRH,RHS):null;if(snapT!==null&&snapRH!==null){updateReadout(calcWBGT(snapT,snapRH,+document.getElementById('cloud').value,+document.getElementById('pressure').value));}buildTable();}
+function applyLang(code){var L=LANGS[code];document.documentElement.lang=code;document.getElementById('t-tagline').innerHTML=L.tagline;document.getElementById('t-title').textContent=L.title;document.getElementById('t-desc').textContent=L.desc;document.getElementById('t-search-label').textContent=L.searchLabel;document.getElementById('t-cloud-label').textContent=L.cloudLabel;document.getElementById('t-pressure-label').textContent=L.pressureLabel;document.getElementById('cityInput').placeholder=L.cityPlaceholder;document.getElementById('wl-temp').textContent=L.wlTemp;document.getElementById('wl-hum').textContent=L.wlHum;document.getElementById('wl-pres').textContent=L.wlPres;document.getElementById('wl-cloud').textContent=L.wlCloud;document.getElementById('wl-hi').textContent=L.wlHi;document.getElementById('wl-uv').textContent=L.wlUv;document.getElementById('wl-air').textContent=L.wlAir;document.getElementById('wl-updated').textContent=L.wlUpdated;var rb=document.getElementById('refreshBtn');rb.title=L.refreshTitle;rb.setAttribute('aria-label',L.refreshTitle);document.getElementById('errMsg').textContent=L.errLoad;document.getElementById('t-explain').textContent=L.explain;document.getElementById('t-formula').textContent=L.formula;document.getElementById('t-credits').innerHTML=L.credits;L.legend.forEach(function(txt,i){document.getElementById('l'+i).textContent=txt;});if(liveUV!==null)updateUvChip(liveUV);if(liveHI!==null)updateHiChip(liveHI);var snapT=(liveTemp!==null)?snapCeil(liveTemp,TEMPS):null;var snapRH=(liveRH!==null)?snapCeil(liveRH,RHS):null;if(snapT!==null&&snapRH!==null){updateReadout(calcWBGT(snapT,snapRH,+document.getElementById('cloud').value,+document.getElementById('pressure').value));}buildTable();}
 function setLang(code){currentLang=code;document.querySelectorAll('.lang-btn').forEach(function(btn){btn.classList.toggle('active',btn.getAttribute('onclick')==="setLang('"+code+"')");});applyLang(code);}
 document.getElementById('cloud').addEventListener('input',function(){document.getElementById('cloud-val').textContent=this.value+'%';buildTable();});
 document.getElementById('pressure').addEventListener('input',function(){document.getElementById('pressure-val').textContent=this.value+' hPa';buildTable();});
