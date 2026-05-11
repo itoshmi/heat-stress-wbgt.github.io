@@ -19,10 +19,11 @@
   header .header-tagline { font-size: 11px; color: #c25600; font-style: italic; font-weight: 600; letter-spacing: 0.2px; margin-bottom: 0.2rem; }
   .live-panel { background: #fff; border: 1px solid #e0e4ea; border-radius: 6px; padding: 0.75rem 1rem; margin-bottom: 0.6rem; }
   .search-row { display: flex; align-items: center; gap: 10px; }
-  .search-label { font-size: 10.5px; color: #444; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; flex-shrink: 0; }
+  .search-label { font-size: 11px; color: #ff6b00; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; flex-shrink: 0; }
   .search-wrap { position: relative; flex: 1; max-width: 340px; }
-  .search-wrap input { width: 100%; padding: 6px 28px 6px 9px; font-size: 12.5px; font-family: 'Georgia', serif; border: 1.5px solid #d0d7e2; border-radius: 4px; outline: none; color: #1a1a1a; background: #fafbfc; transition: border-color 0.15s; }
-  .search-wrap input:focus { border-color: #1a3a5c; background: #fff; }
+  .search-wrap input { width: 100%; padding: 8px 30px 8px 34px; font-size: 14.5px; font-family: 'Georgia', serif; border: 2px solid #ff6b00; border-radius: 5px; outline: none; color: #1a1a1a; background: #fff; transition: border-color 0.15s, box-shadow 0.15s; }
+  .search-wrap input:focus { border-color: #ff6b00; background: #fff; box-shadow: 0 0 0 3px rgba(255,107,0,0.18); }
+  .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; color: #ff6b00; pointer-events: none; }
   .search-spinner { position: absolute; right: 7px; top: 50%; transform: translateY(-50%); width: 12px; height: 12px; border: 2px solid #ccc; border-top-color: #1a3a5c; border-radius: 50%; animation: spin 0.6s linear infinite; display: none; }
   @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
   .suggestions { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 1px solid #d0d7e2; border-top: none; border-radius: 0 0 4px 4px; max-height: 170px; overflow-y: auto; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
@@ -131,6 +132,7 @@
   <div class="search-row">
     <span class="search-label" id="t-search-label"></span>
     <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input type="text" id="cityInput" autocomplete="off">
       <div class="search-spinner" id="spinner"></div>
       <div class="suggestions" id="suggestions"></div>
@@ -224,7 +226,7 @@ var LANGS = {
     title: 'WBGT Heat Stress Calculator',
     tagline: 'Be safe under the sun <span style="font-style:normal">🌞🔆</span>',
     desc: 'Live shade temperature adjusted for air pressure and humidity to give you the WBGT (Wet Bulb Globe Temperature) — a much better measure of heat stress than air temperature alone. Also tracks UV and airborne particulates.',
-    searchLabel: 'City',
+    searchLabel: 'Search City',
     cloudLabel: 'Sky Conditions',
     pressureLabel: 'Altitude / Pressure (hPa)',
     tempHeader: 'Temperature (C)',
@@ -244,7 +246,7 @@ var LANGS = {
     title: 'Calculadora de Estres Termico WBGT',
     tagline: 'Be safe under the sun <span style="font-style:normal">🌞🔆</span>',
     desc: 'Temperatura a la sombra ajustada por presion del aire y humedad para obtener el WBGT (Wet Bulb Globe Temperature) -- una medida del estres termico mucho mas util que la temperatura del aire por si sola. Tambien incluye UV y particulas en el aire.',
-    searchLabel: 'Ciudad',
+    searchLabel: 'Buscar Ciudad',
     cloudLabel: 'Condiciones del Cielo',
     pressureLabel: 'Altitud / Presion (hPa)',
     tempHeader: 'Temperatura (C)',
@@ -264,7 +266,7 @@ var LANGS = {
     title: 'Calculadora de Estresse Termico WBGT',
     tagline: 'Be safe under the sun <span style="font-style:normal">🌞🔆</span>',
     desc: 'Temperatura a sombra ajustada pela pressao do ar e umidade para obter o WBGT (Wet Bulb Globe Temperature) -- uma medida de estresse termico muito mais util que a temperatura do ar sozinha. Tambem inclui UV e particulas no ar.',
-    searchLabel: 'Cidade',
+    searchLabel: 'Buscar Cidade',
     cloudLabel: 'Condicoes do Ceu',
     pressureLabel: 'Altitude / Pressao (hPa)',
     tempHeader: 'Temperatura (C)',
@@ -284,7 +286,7 @@ var LANGS = {
     title: 'Calculateur de Stress Thermique WBGT',
     tagline: 'Be safe under the sun <span style="font-style:normal">🌞🔆</span>',
     desc: "Temperature a l'ombre ajustee pour la pression et l'humidite, pour obtenir le WBGT (Wet Bulb Globe Temperature) -- une mesure du stress thermique bien plus utile que la temperature de l'air seule. Inclut aussi les UV et les particules dans l'air.",
-    searchLabel: 'Ville',
+    searchLabel: 'Rechercher Ville',
     cloudLabel: 'Conditions du Ciel',
     pressureLabel: 'Altitude / Pression (hPa)',
     tempHeader: 'Temperature (C)',
@@ -304,7 +306,7 @@ var LANGS = {
     title: 'Calcolatore di Stress Termico WBGT',
     tagline: 'Be safe under the sun <span style="font-style:normal">🌞🔆</span>',
     desc: "Temperatura all'ombra in tempo reale corretta per pressione atmosferica e umidita per ottenere il WBGT (Wet Bulb Globe Temperature) -- una misura dello stress termico molto piu utile della sola temperatura dell'aria. Include anche UV e particolato nell'aria.",
-    searchLabel: 'Citta',
+    searchLabel: 'Cerca Citta',
     cloudLabel: 'Condizioni del Cielo',
     pressureLabel: 'Altitudine / Pressione (hPa)',
     tempHeader: 'Temperatura (C)',
@@ -324,7 +326,7 @@ var LANGS = {
     title: 'WBGT Hittestress Calculator',
     tagline: 'Be safe under the sun <span style="font-style:normal">🌞🔆</span>',
     desc: 'Schaduwtemperatuur live aangepast voor luchtdruk en luchtvochtigheid om de WBGT (Wet Bulb Globe Temperature) te berekenen -- een veel betere maatstaf voor hittestress dan alleen de luchttemperatuur. Toont ook UV en deeltjes in de lucht.',
-    searchLabel: 'Stad',
+    searchLabel: 'Zoek Stad',
     cloudLabel: 'Bewolking',
     pressureLabel: 'Hoogte / Druk (hPa)',
     tempHeader: 'Temperatuur (C)',
